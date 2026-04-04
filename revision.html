@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revision Dashboard — Franks Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:#0a0a0a;color:#f0ede8;font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}
+:root{--blue:#0057A8;--bl:#4da3ff;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);}
+
+/* ── PASSWORD SCREEN ── */
+#pw-screen{position:fixed;inset:0;z-index:9999;background:#0a0a0a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+#pw-screen img{height:80px;opacity:.9;}
+#pw-screen h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:#f0ede8;letter-spacing:-.01em;}
+#pw-screen p{font-size:13px;color:rgba(240,237,232,.35);text-align:center;}
+#pw-wrap{display:flex;gap:10px;align-items:center;}
+#pw-input{padding:12px 18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#f0ede8;font-family:'Outfit',sans-serif;font-size:14px;outline:none;width:200px;letter-spacing:.08em;}
+#pw-input:focus{border-color:rgba(0,87,168,.6);}
+#pw-btn{padding:12px 22px;background:var(--blue);border:none;border-radius:10px;color:#fff;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:background .2s;}
+#pw-btn:hover{background:#0066cc;}
+#pw-err{font-size:12px;color:#f87171;height:16px;text-align:center;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:15px 48px;background:rgba(10,10,10,.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo img{height:50px;width:auto;object-fit:contain;filter:brightness(0) invert(1);}
+.nav-r{display:flex;align-items:center;gap:16px;}
+.nav-date{font-size:11px;letter-spacing:.1em;color:rgba(240,237,232,.3);text-transform:uppercase;}
+.nav-tag{display:flex;align-items:center;gap:7px;padding:6px 13px;border:1px solid rgba(0,87,168,.4);border-radius:100px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--bl);}
+.pdot{width:6px;height:6px;border-radius:50%;background:var(--bl);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.save-ind{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(240,237,232,.18);transition:color .4s;}
+.save-ind.ok{color:#10b981;}
+
+/* ── LAYOUT ── */
+.page{padding-top:82px;}
+.grid{display:grid;grid-template-columns:1fr 308px;max-width:1440px;margin:0 auto;}
+.left{padding:34px 38px 60px 46px;border-right:1px solid var(--border);}
+.right{padding:30px 24px 60px;background:#080808;}
+
+/* ── COUNTDOWN ── */
+.cd-hero{background:linear-gradient(135deg,#0057A8,#003d7a 60%,#001f40);border-radius:16px;padding:30px;margin-bottom:22px;position:relative;overflow:hidden;}
+.cd-hero::before{content:'EXAMS';position:absolute;font-family:'Syne',sans-serif;font-size:100px;font-weight:800;color:rgba(255,255,255,.04);right:-10px;top:50%;transform:translateY(-50%);pointer-events:none;letter-spacing:-.04em;}
+.cd-lbl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.cd-lbl::before{content:'';display:block;width:20px;height:1px;background:rgba(255,255,255,.25);}
+.cd-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:14px;}
+.cd-nums{display:flex;align-items:flex-end;gap:5px;}
+.cd-n{text-align:center;}
+.cd-v{font-family:'Syne',sans-serif;font-size:46px;font-weight:800;line-height:1;color:#fff;display:block;}
+.cd-sep{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:rgba(255,255,255,.25);margin-bottom:4px;}
+.cd-u{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);display:block;margin-top:3px;}
+.cd-row{display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);flex-wrap:wrap;gap:8px;}
+.ep{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.55);}
+.ep strong{color:#fff;}
+.edot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:22px;}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;text-align:center;}
+.sv{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#f0ede8;letter-spacing:-.02em;}
+.sl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(240,237,232,.25);margin-top:3px;}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:3px;margin-bottom:22px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:4px;}
+.tab{flex:1;padding:9px 8px;border-radius:9px;font-size:11px;font-weight:500;cursor:pointer;transition:all .25s;border:none;background:transparent;color:rgba(240,237,232,.4);font-family:'Outfit',sans-serif;}
+.tab.ae{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#93c5fd;}
+.tab.ab{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#fcd34d;}
+.tab.ag{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:#6ee7b7;}
+.tab:not(.ae):not(.ab):not(.ag):hover{background:rgba(255,255,255,.05);color:rgba(240,237,232,.7);}
+.sp{display:none;}.sp.active{display:block;}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px;}
+.sbadge{display:inline-flex;align-items:center;padding:6px 14px;border-radius:100px;font-size:11px;font-weight:500;letter-spacing:.06em;}
+.be{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25);color:#93c5fd;}
+.bb{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fcd34d;}
+.bg{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);color:#6ee7b7;}
+.sdate{font-size:10px;color:rgba(240,237,232,.3);}
+.slbl{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,237,232,.22);margin-bottom:10px;font-weight:500;}
+
+/* ── FOCUS ── */
+.focus{border-radius:12px;padding:20px;margin-bottom:20px;position:relative;overflow:hidden;}
+.fe{background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(59,130,246,.04));border:1px solid rgba(59,130,246,.2);}
+.fb{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(245,158,11,.03));border:1px solid rgba(245,158,11,.2);}
+.fg{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(16,185,129,.03));border:1px solid rgba(16,185,129,.2);}
+.fbg{position:absolute;top:12px;right:16px;font-family:'Syne',sans-serif;font-size:55px;font-weight:800;opacity:.06;}
+.ftag{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(240,237,232,.32);margin-bottom:7px;}
+.ftopic{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#f0ede8;margin-bottom:6px;}
+.fdesc{font-size:12px;line-height:1.7;color:rgba(240,237,232,.42);}
+.ftips{margin-top:11px;display:flex;flex-direction:column;gap:5px;}
+.ftip{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:rgba(240,237,232,.48);line-height:1.5;}
+.ftip::before{content:'→';color:var(--bl);flex-shrink:0;margin-top:1px;font-size:10px;}
+
+/* ── TOPICS ── */
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
+.tc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .25s;position:relative;user-select:none;}
+.tc:hover{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.06);}
+.tc.done{background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.22);}
+.tc.done .tn{color:rgba(240,237,232,.45);}
+.tchk{position:absolute;top:9px;right:9px;width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .25s;}
+.tc.done .tchk{background:#10b981;border-color:#10b981;color:#fff;}
+.tn{font-size:12px;font-weight:500;color:#f0ede8;margin-bottom:3px;line-height:1.3;padding-right:20px;}
+.tt{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(240,237,232,.28);}
+.tbar{margin-top:8px;height:2px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;}
+.tbf{height:100%;border-radius:2px;}
+.pe{background:linear-gradient(to right,#3b82f6,#60a5fa);}
+.pb{background:linear-gradient(to right,#f59e0b,#fcd34d);}
+.pg{background:linear-gradient(to right,#10b981,#34d399);}
+
+/* ── PAST PAPER Q ── */
+.ppq-section{margin-bottom:22px;}
+.ppq-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.ppq-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#f0ede8;}
+.ppq-badge{font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:5px;font-weight:500;}
+.ppq-badge.be{background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.25);}
+.ppq-badge.bb{background:rgba(245,158,11,.12);color:#fcd34d;border:1px solid rgba(245,158,11,.25);}
+.ppq-badge.bg{background:rgba(16,185,129,.1);color:#6ee7b7;border:1px solid rgba(16,185,129,.2);}
+.ppq-list{display:flex;flex-direction:column;gap:8px;}
+.ppq-item{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:14px 16px;transition:border-color .25s;}
+.ppq-item:hover{border-color:rgba(255,255,255,.14);}
+.ppq-meta{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(240,237,232,.28);margin-bottom:6px;display:flex;gap:10px;}
+.ppq-q{font-size:12px;line-height:1.65;color:rgba(240,237,232,.75);font-weight:400;}
+.ppq-marks{font-size:10px;color:var(--bl);margin-top:5px;font-weight:500;}
+
+/* ── RESOURCES ── */
+.rl{display:flex;flex-direction:column;gap:7px;margin-bottom:22px;}
+.ri{display:flex;align-items:center;gap:11px;padding:10px 13px;background:var(--surface);border:1px solid var(--border);border-radius:9px;transition:all .25s;}
+.ri:hover{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.06);transform:translateX(3px);}
+.rico{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.yt{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.2);}
+.doc{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);}
+.web{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);}
+.ppdf{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);}
+.rinfo{flex:1;min-width:0;}
+.rn{font-size:12px;font-weight:500;color:#f0ede8;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rm{font-size:10px;color:rgba(240,237,232,.32);}
+.rarr{color:rgba(240,237,232,.18);font-size:11px;flex-shrink:0;}
+
+/* ── RE MOTIVATION ── */
+.re-section{margin-bottom:24px;}
+.re-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.re-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--blue),#003d7a);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.re-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#f0ede8;}
+.re-sub{font-size:10px;color:rgba(240,237,232,.3);}
+.re-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.re-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;transition:border-color .25s;}
+.re-card:hover{border-color:rgba(0,87,168,.35);}
+.re-card-ico{font-size:18px;margin-bottom:8px;}
+.re-card-subj{font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px;font-weight:500;}
+.se{color:#93c5fd;}.sb{color:#fcd34d;}.sg{color:#6ee7b7;}
+.re-card-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#f0ede8;margin-bottom:5px;line-height:1.2;}
+.re-card-txt{font-size:10px;line-height:1.65;color:rgba(240,237,232,.38);}
+
+/* ── DRONE GALLERY (cinematic fullscreen) ── */
+.drone-section{margin-bottom:26px;}
+.drone-intro{margin-bottom:14px;}
+.drone-lbl{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,237,232,.22);margin-bottom:3px;font-weight:500;}
+.drone-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#f0ede8;margin-bottom:5px;}
+.drone-sub{font-size:11px;color:rgba(240,237,232,.33);line-height:1.6;}
+
+.drone-reel{display:flex;flex-direction:column;gap:0;}
+.drone-frame{position:relative;height:70vh;min-height:420px;overflow:hidden;cursor:pointer;}
+.drone-frame img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.08);transition:transform 12s ease-out;}
+.drone-frame.in-view img{transform:scale(1.0);}
+.drone-frame-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,10,.15) 0%,rgba(10,10,10,.05) 40%,rgba(10,10,10,.65) 100%);}
+.drone-frame-caption{position:absolute;bottom:0;left:0;right:0;padding:28px 32px;}
+.drone-cap-loc{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:6px;}
+.drone-cap-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.1;}
+.drone-cap-quote{font-size:12px;line-height:1.7;color:rgba(255,255,255,.55);font-style:italic;max-width:520px;}
+.drone-expand-btn{position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(10,10,10,.5);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,.7);cursor:pointer;transition:all .25s;backdrop-filter:blur(8px);}
+.drone-expand-btn:hover{background:rgba(10,10,10,.8);color:#fff;}
+
+/* Fullscreen modal */
+.fs-modal{position:fixed;inset:0;z-index:500;background:#000;display:none;align-items:center;justify-content:center;}
+.fs-modal.open{display:flex;}
+.fs-modal img{width:100%;height:100%;object-fit:contain;}
+.fs-close{position:absolute;top:20px;right:24px;font-size:28px;color:rgba(255,255,255,.7);cursor:pointer;z-index:501;line-height:1;transition:color .2s;}
+.fs-close:hover{color:#fff;}
+.fs-nav{position:absolute;top:50%;transform:translateY(-50%);font-size:28px;color:rgba(255,255,255,.5);cursor:pointer;padding:10px;transition:color .2s;z-index:501;}
+.fs-nav:hover{color:#fff;}
+.fs-prev{left:20px;}.fs-next{right:20px;}
+.fs-caption{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-family:'Syne',sans-serif;font-size:13px;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase;}
+
+/* ── GB NEWS ── */
+.news-section{margin-bottom:24px;}
+.news-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;}
+.news-hdr-l{display:flex;align-items:center;gap:10px;}
+.news-badge{display:flex;align-items:center;gap:5px;padding:3px 9px;background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.25);border-radius:5px;font-size:9px;font-weight:600;letter-spacing:.1em;color:#f87171;text-transform:uppercase;}
+.news-live-dot{width:5px;height:5px;border-radius:50%;background:#f87171;animation:pulse 1.5s ease-in-out infinite;}
+.news-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#f0ede8;}
+.news-list{display:flex;flex-direction:column;gap:7px;}
+.ni{display:flex;gap:11px;padding:12px 13px;background:var(--surface);border:1px solid var(--border);border-radius:9px;transition:all .25s;cursor:pointer;}
+.ni:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.05);}
+.ni-img{width:50px;height:50px;border-radius:6px;object-fit:cover;flex-shrink:0;background:rgba(255,255,255,.06);}
+.ni-body{flex:1;min-width:0;}
+.ni-title{font-size:12px;font-weight:500;color:#f0ede8;line-height:1.4;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.ni-meta{font-size:10px;color:rgba(240,237,232,.28);display:flex;align-items:center;gap:6px;}
+.ni-cat{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);font-weight:500;}
+.news-more{width:100%;margin-top:7px;padding:9px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:rgba(240,237,232,.35);font-size:11px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;}
+.news-more:hover{border-color:rgba(255,255,255,.18);color:rgba(240,237,232,.65);}
+
+/* ── SIDEBAR ── */
+.ss{margin-bottom:22px;}
+.st{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#f0ede8;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.quote{background:linear-gradient(135deg,rgba(0,87,168,.1),rgba(0,87,168,.03));border:1px solid rgba(0,87,168,.2);border-radius:12px;padding:15px;margin-bottom:18px;}
+.qm{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--blue);line-height:1;margin-bottom:3px;}
+.qt{font-size:11px;line-height:1.7;color:rgba(240,237,232,.45);font-style:italic;}
+
+/* TIMER */
+.tdisp{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:17px;text-align:center;margin-bottom:9px;}
+.ttime{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;letter-spacing:-.03em;color:#f0ede8;line-height:1;}
+.tlbl2{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,237,232,.28);margin-top:5px;}
+.tpw{margin-top:10px;height:3px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.tp{height:100%;background:linear-gradient(to right,var(--blue),var(--bl));border-radius:3px;transition:width 1s linear;width:0%;}
+.tbtns{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.tbtn{padding:9px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;cursor:pointer;border:none;transition:all .2s;}
+.tstart{background:var(--blue);color:#fff;}.tstart:hover{background:#0066cc;}
+.treset{background:rgba(255,255,255,.07);color:rgba(240,237,232,.55);border:1px solid var(--border);}
+.treset:hover{background:rgba(255,255,255,.11);}
+.presets{display:flex;gap:4px;margin-bottom:8px;}
+.preset{flex:1;padding:6px 4px;border-radius:7px;font-family:'Outfit',sans-serif;font-size:10px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:rgba(240,237,232,.45);transition:all .2s;text-align:center;}
+.preset:hover,.preset.active{background:rgba(0,87,168,.15);border-color:rgba(0,87,168,.4);color:var(--bl);}
+
+/* LOG */
+.llist{display:flex;flex-direction:column;gap:5px;max-height:150px;overflow-y:auto;}
+.llist::-webkit-scrollbar{width:3px;}
+.llist::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px;}
+.le{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;}
+.ls{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:500;color:#f0ede8;}
+.ld{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.de{background:#3b82f6;}.db{background:#f59e0b;}.dg{background:#10b981;}
+.lr{display:flex;align-items:center;gap:7px;}
+.lm{font-size:11px;color:rgba(240,237,232,.38);}
+.ldel{font-size:15px;color:rgba(240,237,232,.13);cursor:pointer;line-height:1;transition:color .2s;}
+.ldel:hover{color:rgba(239,68,68,.65);}
+.ladd{display:flex;gap:5px;margin-top:7px;}
+.lsel{flex:1;padding:7px 9px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:#f0ede8;font-family:'Outfit',sans-serif;font-size:11px;outline:none;}
+.lsel option{background:#1a1a1a;}
+.lmin{width:54px;padding:7px 7px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:#f0ede8;font-family:'Outfit',sans-serif;font-size:11px;outline:none;}
+.lbtn{padding:7px 10px;background:var(--blue);border:none;border-radius:8px;color:#fff;font-size:11px;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .2s;}
+.lbtn:hover{background:#0066cc;}
+.trow{display:flex;justify-content:space-between;margin-top:9px;margin-bottom:4px;}
+.tlbl3{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(240,237,232,.22);}
+.tval{font-size:11px;font-weight:600;color:#f0ede8;}
+.tbw{height:3px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.tb2{height:100%;background:linear-gradient(to right,var(--blue),var(--bl));border-radius:3px;transition:width .5s;}
+
+/* HEATMAP */
+.hlrow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px;}
+.hl{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:rgba(240,237,232,.18);text-align:center;}
+.hmap{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.hc{aspect-ratio:1;border-radius:3px;cursor:pointer;transition:all .2s;}
+.h0{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05);}
+.h1{background:rgba(0,87,168,.2);border:1px solid rgba(0,87,168,.3);}
+.h2{background:rgba(0,87,168,.45);border:1px solid rgba(0,87,168,.55);}
+.h3{background:rgba(0,87,168,.75);border:1px solid rgba(0,87,168,.9);}
+.hc:hover{transform:scale(1.18);}
+.htday{box-shadow:0 0 0 2px rgba(77,163,255,.6);}
+.hleg{display:flex;align-items:center;gap:4px;margin-top:6px;justify-content:flex-end;}
+.hlgl{font-size:9px;color:rgba(240,237,232,.18);}
+.hlgc{width:9px;height:9px;border-radius:2px;}
+
+/* RINGS */
+.rings{display:flex;gap:10px;justify-content:space-between;}
+.rw{display:flex;flex-direction:column;align-items:center;gap:5px;}
+.rsvg{transform:rotate(-90deg);}
+.rbg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:4;}
+.rc{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .8s ease;}
+.rl2{font-size:9px;color:rgba(240,237,232,.32);text-align:center;}
+.rp{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#f0ede8;}
+
+/* EXAM LIST */
+.exams{display:flex;flex-direction:column;gap:5px;}
+.ex{display:flex;align-items:center;gap:9px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;}
+.ex.next{border-color:rgba(0,87,168,.4);background:rgba(0,87,168,.06);}
+.exdc{text-align:right;flex-shrink:0;min-width:30px;}
+.exmo{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:rgba(240,237,232,.28);}
+.exd{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#f0ede8;line-height:1;}
+.exdiv{width:1px;height:24px;background:var(--border);flex-shrink:0;}
+.exi{flex:1;}
+.exn{font-size:11px;font-weight:500;color:#f0ede8;margin-bottom:1px;}
+.exp{font-size:9px;color:rgba(240,237,232,.32);}
+.exb{font-size:9px;font-weight:500;padding:2px 6px;border-radius:4px;flex-shrink:0;}
+.ee{background:rgba(59,130,246,.12);color:#93c5fd;border:1px solid rgba(59,130,246,.2);}
+.eb2{background:rgba(245,158,11,.1);color:#fcd34d;border:1px solid rgba(245,158,11,.2);}
+.eg{background:rgba(16,185,129,.1);color:#6ee7b7;border:1px solid rgba(16,185,129,.2);}
+
+footer{padding:16px 48px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.fb2{display:flex;align-items:center;gap:11px;}
+.fb2 img{height:34px;opacity:.7;filter:brightness(0) invert(1);}
+.ft{font-size:10px;color:rgba(240,237,232,.2);letter-spacing:.06em;}
+.freset{font-size:10px;color:rgba(240,237,232,.12);cursor:pointer;text-decoration:underline;}
+.freset:hover{color:rgba(239,68,68,.4);}
+
+@media(max-width:960px){
+  nav{padding:12px 18px;}.nav-logo img{height:38px;}.nav-date{display:none;}
+  .grid{grid-template-columns:1fr;}
+  .right{border-top:1px solid var(--border);}
+  .left{padding:20px 16px;}.right{padding:20px 16px;}
+  .tgrid{grid-template-columns:1fr;}
+  .re-cards{grid-template-columns:1fr;}
+  footer{padding:16px;flex-direction:column;gap:8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD SCREEN -->
+<div id="pw-screen">
+  <img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/Franks_Media__1_-removebg-preview.png" alt="Franks Media">
+  <h2>Revision Dashboard</h2>
+  <p>Enter your password to access</p>
+  <div id="pw-wrap">
+    <input id="pw-input" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button id="pw-btn" onclick="checkPw()">Enter</button>
+  </div>
+  <div id="pw-err"></div>
+</div>
+
+<!-- FULLSCREEN DRONE MODAL -->
+<div class="fs-modal" id="fsModal">
+  <span class="fs-close" onclick="closeFs()">✕</span>
+  <span class="fs-nav fs-prev" onclick="fsNav(-1)">‹</span>
+  <img id="fsImg" src="" alt="">
+  <span class="fs-nav fs-next" onclick="fsNav(1)">›</span>
+  <div class="fs-caption" id="fsCaption"></div>
+</div>
+
+<nav>
+  <div class="nav-logo"><img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/Franks_Media__1_-removebg-preview.png" alt="Franks Media"></div>
+  <div class="nav-r">
+    <span class="nav-date" id="navDate"></span>
+    <span class="save-ind" id="saveInd">auto-saving</span>
+    <div class="nav-tag"><div class="pdot"></div>Revision Mode</div>
+  </div>
+</nav>
+
+<div class="page" id="mainPage" style="display:none;">
+<div class="grid">
+
+<!-- ══ LEFT ══ -->
+<div class="left">
+
+  <div class="cd-hero">
+    <div class="cd-lbl">First Exam Countdown</div>
+    <div class="cd-title">Economics A · Paper 1 — 11 May 2026, 9:00 AM</div>
+    <div class="cd-nums">
+      <div class="cd-n"><span class="cd-v" id="cd-d">--</span><span class="cd-u">Days</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-n"><span class="cd-v" id="cd-h">--</span><span class="cd-u">Hrs</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-n"><span class="cd-v" id="cd-m">--</span><span class="cd-u">Min</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-n"><span class="cd-v" id="cd-s">--</span><span class="cd-u">Sec</span></div>
+    </div>
+    <div class="cd-row">
+      <div class="ep"><div class="edot" style="background:#3b82f6;"></div>Econ A · <strong>11 May</strong></div>
+      <div class="ep"><div class="edot" style="background:#f59e0b;"></div>Business · <strong>11 May</strong></div>
+      <div class="ep"><div class="edot" style="background:#10b981;"></div>Geography OCR · <strong>12 May</strong></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="sc"><div class="sv" id="sStat">0</div><div class="sl">Topics Done</div></div>
+    <div class="sc"><div class="sv" id="hStat">0h</div><div class="sl">Hrs Revised</div></div>
+    <div class="sc"><div class="sv" id="dStat">0</div><div class="sl">Days Active</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab ae" onclick="switchTab('econ',this)">📈 Economics</button>
+    <button class="tab" onclick="switchTab('biz',this)">📊 Business</button>
+    <button class="tab" onclick="switchTab('geo',this)">🌍 Geography</button>
+  </div>
+
+  <!-- ── ECONOMICS ── -->
+  <div class="sp active" id="sp-econ">
+    <div class="sh">
+      <div class="sbadge be">📈 Edexcel Economics A · 9EC0</div>
+      <span class="sdate">P1: 11 May · P2: 18 May · P3: June</span>
+    </div>
+    <div class="slbl">Topics — 3 of 4 themes complete &nbsp;<span id="econ-cnt" style="color:rgba(240,237,232,.35);font-size:10px;"></span></div>
+    <div class="tgrid" id="tg-econ"></div>
+
+    <div class="ppq-section">
+      <div class="ppq-header">
+        <div class="ppq-title">Today's Past Paper Questions</div>
+        <div class="ppq-badge be">Economics A</div>
+      </div>
+      <div class="ppq-list" id="ppq-econ"></div>
+    </div>
+
+    <div class="slbl">Resources</div>
+    <div class="rl">
+      <a href="https://www.savemyexams.com/a-level/economics/edexcel/17/" target="_blank" class="ri"><div class="rico web">🌐</div><div class="rinfo"><div class="rn">Save My Exams — Edexcel Economics A</div><div class="rm">Notes · Past papers · Mark schemes · 9EC0</div></div><span class="rarr">↗</span></a>
+      <a href="https://www.youtube.com/@EconplusDal" target="_blank" class="ri"><div class="rico yt">▶</div><div class="rinfo"><div class="rn">EconplusDal — YouTube</div><div class="rm">Best Edexcel A-level Econ channel</div></div><span class="rarr">↗</span></a>
+      <a href="https://www.tutor2u.net/economics/reference/a-level-economics-edexcel" target="_blank" class="ri"><div class="rico doc">📄</div><div class="rinfo"><div class="rn">Tutor2U — Economics</div><div class="rm">Diagrams · Essays · Evaluation chains</div></div><span class="rarr">↗</span></a>
+      <a href="https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/economics-a-2015.coursematerials.html" target="_blank" class="ri"><div class="rico ppdf">📋</div><div class="rinfo"><div class="rn">Pearson Official Past Papers · 9EC0</div><div class="rm">All papers &amp; official mark schemes</div></div><span class="rarr">↗</span></a>
+    </div>
+  </div>
+
+  <!-- ── BUSINESS ── -->
+  <div class="sp" id="sp-biz">
+    <div class="sh">
+      <div class="sbadge bb">📊 Edexcel Business · 9BS0</div>
+      <span class="sdate">P1: 11 May · P2: 18 May · P3: June</span>
+    </div>
+    <div class="slbl">Topics — 3 of 4 themes complete &nbsp;<span id="biz-cnt" style="color:rgba(240,237,232,.35);font-size:10px;"></span></div>
+    <div class="tgrid" id="tg-biz"></div>
+
+    <div class="ppq-section">
+      <div class="ppq-header">
+        <div class="ppq-title">Today's Past Paper Questions</div>
+        <div class="ppq-badge bb">Business</div>
+      </div>
+      <div class="ppq-list" id="ppq-biz"></div>
+    </div>
+
+    <!-- Biscuits & Confectionery P3 Research -->
+    <div style="margin-bottom:20px;padding:16px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:10px;">
+      <div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#fcd34d;margin-bottom:8px;font-weight:500;">📋 Paper 3 Case Study Research — Biscuits &amp; Confectionery</div>
+      <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#f0ede8;margin-bottom:8px;">Key Companies &amp; Market Context</div>
+      <div style="font-size:11px;line-height:1.75;color:rgba(240,237,232,.5);">
+        <strong style="color:rgba(240,237,232,.8);">Market leaders:</strong> McVitie's (pladis), Mondelez (Cadbury, Oreo), Nestlé (KitKat), Mars, Ferrero. UK biscuit market ~£3bn. Confectionery ~£4.5bn.<br><br>
+        <strong style="color:rgba(240,237,232,.8);">Key themes to revise for P3:</strong> Ansoff Matrix (product development — reduced sugar lines), Porter's Five Forces (supermarket own-label threat), financial ratio analysis (ROCE for capital-intensive manufacturing), HR (shift workers, automation vs employment), global strategy (export markets, MNCs sourcing cocoa ethically).<br><br>
+        <strong style="color:rgba(240,237,232,.8);">Current issues:</strong> Cocoa price surge 2024 (commodity risk), sugar tax implications, sustainability/palm oil pressure, premiumisation trend vs cost-of-living squeeze on discretionary spend.<br><br>
+        <strong style="color:rgba(240,237,232,.8);">Essay angle:</strong> "To what extent is innovation the most important factor in maintaining competitive advantage in the confectionery industry?" — evaluate with: financial strength, brand equity, pricing strategy, and global distribution.
+      </div>
+    </div>
+
+    <div class="slbl">Resources</div>
+    <div class="rl">
+      <a href="https://www.savemyexams.com/a-level/business/edexcel/" target="_blank" class="ri"><div class="rico web">🌐</div><div class="rinfo"><div class="rn">Save My Exams — Edexcel Business</div><div class="rm">Notes · Model answers · Past papers · 9BS0</div></div><span class="rarr">↗</span></a>
+      <a href="https://www.youtube.com/@BusinessandEconomics" target="_blank" class="ri"><div class="rico yt">▶</div><div class="rinfo"><div class="rn">Business &amp; Economics — YouTube</div><div class="rm">Edexcel 9BS0 specific video lessons</div></div><span class="rarr">↗</span></a>
+      <a href="https://www.tutor2u.net/business/reference/edexcel-a-level-business" target="_blank" class="ri"><div class="rico doc">📄</div><div class="rinfo"><div class="rn">Tutor2U — Business</div><div class="rm">Case studies · Key terms · Evaluation chains</div></div><span class="rarr">↗</span></a>
+      <a href="https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/business-2015.coursematerials.html" target="_blank" class="ri"><div class="rico ppdf">📋</div><div class="rinfo"><div class="rn">Pearson Official Past Papers · 9BS0</div><div class="rm">All papers &amp; official mark schemes</div></div><span class="rarr">↗</span></a>
+    </div>
+  </div>
+
+  <!-- ── GEOGRAPHY ── -->
+  <div class="sp" id="sp-geo">
+    <div class="sh">
+      <div class="sbadge bg">🌍 OCR Geography A · H481</div>
+      <span class="sdate">P1: 12 May · P2: 21 May · P3: 8 June</span>
+    </div>
+    <div class="slbl">Your Topics &nbsp;<span id="geo-cnt" style="color:rgba(240,237,232,.35);font-size:10px;"></span></div>
+    <div class="tgrid" id="tg-geo"></div>
+
+    <div class="ppq-section">
+      <div class="ppq-header">
+        <div class="ppq-title">Today's Past Paper Questions</div>
+        <div class="ppq-badge bg">Geography OCR</div>
+      </div>
+      <div class="ppq-list" id="ppq-geo"></div>
+    </div>
+
+    <div class="slbl">Resources</div>
+    <div class="rl">
+      <a href="https://www.savemyexams.com/a-level/geography/ocr/a/" target="_blank" class="ri"><div class="rico web">🌐</div><div class="rinfo"><div class="rn">Save My Exams — OCR Geography A</div><div class="rm">H481 notes · Past papers · Model answers</div></div><span class="rarr">↗</span></a>
+      <a href="https://ibaguette.com/cheatsheets/alevel/geography/all" target="_blank" class="ri"><div class="rico doc">📚</div><div class="rinfo"><div class="rn">iBaguette — OCR Geo Cheat Sheets</div><div class="rm">Detailed free notes for every H481 topic</div></div><span class="rarr">↗</span></a>
+      <a href="https://www.youtube.com/@geographyalltheway" target="_blank" class="ri"><div class="rico yt">▶</div><div class="rinfo"><div class="rn">Geography All The Way — YouTube</div><div class="rm">A-level video explanations · OCR aligned</div></div><span class="rarr">↗</span></a>
+      <a href="https://www.ocr.org.uk/qualifications/as-and-a-level/geography-h081-h481-from-2016/assessment/" target="_blank" class="ri"><div class="rico ppdf">📋</div><div class="rinfo"><div class="rn">OCR Official Past Papers · H481</div><div class="rm">All past papers &amp; mark schemes</div></div><span class="rarr">↗</span></a>
+    </div>
+  </div>
+
+  <!-- ── REAL ESTATE MOTIVATION ── -->
+  <div class="re-section">
+    <div class="re-header">
+      <div class="re-icon">🏢</div>
+      <div><div class="re-title">Why This Matters — Your Real Estate Future</div><div class="re-sub">Sheffield Hallam (2nd UK · 1st graduate outcomes) · University of Manchester · RICS accredited</div></div>
+    </div>
+    <div class="re-cards">
+      <div class="re-card"><div class="re-card-ico">📈</div><div class="re-card-subj se">Economics A</div><div class="re-card-title">Property Markets &amp; Valuation</div><div class="re-card-txt">Interest rates, market failure in planning, elasticity of housing supply — the exact frameworks used daily by surveyors and investment analysts.</div></div>
+      <div class="re-card"><div class="re-card-ico">📊</div><div class="re-card-subj sb">Business</div><div class="re-card-title">Development Finance &amp; Strategy</div><div class="re-card-txt">Financial ratios, investment appraisal, NPV and Ansoff are standard in real estate. Theme 4 covers MNCs — relevant to overseas property investment.</div></div>
+      <div class="re-card"><div class="re-card-ico">🌍</div><div class="re-card-subj sg">Geography</div><div class="re-card-title">Place, Planning &amp; Risk</div><div class="re-card-txt">Changing Spaces is literally place-making. Hazardous Earth and Global Migration both drive urban development demand and site risk assessment.</div></div>
+    </div>
+    <div style="margin-top:10px;padding:13px 15px;background:rgba(0,87,168,.07);border:1px solid rgba(0,87,168,.2);border-radius:10px;">
+      <div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(0,87,168,.9);margin-bottom:5px;font-weight:500;">Sheffield Hallam Real Estate BSc · Your Target</div>
+      <div style="font-size:11px;line-height:1.7;color:rgba(240,237,232,.48);">Ranked <strong style="color:#f0ede8;">2nd UK</strong> for Land &amp; Property and <strong style="color:#f0ede8;">1st for graduate outcomes</strong> (CUG 2026). RICS accredited. Entry: <strong style="color:#f0ede8;">104–112 UCAS points.</strong> Field trips to live Sheffield developments.</div>
+    </div>
+  </div>
+
+  <!-- ── DRONE CINEMATIC GALLERY ── -->
+  <div class="drone-section">
+    <div class="drone-intro">
+      <div class="drone-lbl">Aerial Perspectives · Take a moment</div>
+      <div class="drone-title">Your Work. Your Lens. Your Why.</div>
+      <div class="drone-sub">Between sessions — breathe. You built a business, you flew these. Click any image to open fullscreen. You're going to be fine on 11 May.</div>
+    </div>
+    <div class="drone-reel" id="droneReel"></div>
+  </div>
+
+  <!-- ── GB NEWS FEED ── -->
+  <div class="news-section">
+    <div class="news-hdr">
+      <div class="news-hdr-l">
+        <div class="news-badge"><div class="news-live-dot"></div>Live</div>
+        <div class="news-title">GB News</div>
+      </div>
+    </div>
+    <div class="news-list" id="newsList"></div>
+    <button class="news-more" id="newsMore" onclick="showMoreNews()" style="display:none;">Show more stories ↓</button>
+  </div>
+
+</div><!-- /left -->
+
+<!-- ══ RIGHT ══ -->
+<div class="right">
+
+  <div class="quote"><div class="qm">"</div><div class="qt" id="qTxt"></div></div>
+
+  <div class="ss">
+    <div class="st">Revision Timer <span id="sess-ct" style="font-size:10px;color:rgba(240,237,232,.28);font-weight:300;"></span></div>
+    <div class="presets">
+      <div class="preset active" onclick="setPreset(25,this)">25m</div>
+      <div class="preset" onclick="setPreset(45,this)">45m</div>
+      <div class="preset" onclick="setPreset(60,this)">60m</div>
+      <div class="preset" onclick="setPreset(90,this)">90m</div>
+    </div>
+    <div class="tdisp">
+      <div class="ttime" id="tDisp">25:00</div>
+      <div class="tlbl2" id="tLbl">Ready to focus</div>
+      <div class="tpw"><div class="tp" id="tBar"></div></div>
+    </div>
+    <div class="tbtns">
+      <button class="tbtn tstart" id="tBtn" onclick="toggleTimer()">▶ Start</button>
+      <button class="tbtn treset" onclick="resetTimer()">↺ Reset</button>
+    </div>
+  </div>
+
+  <div class="ss">
+    <div class="st">Today's Log</div>
+    <div class="llist" id="logList"></div>
+    <div class="ladd">
+      <select class="lsel" id="logSubj"><option value="econ">📈 Econ</option><option value="biz">📊 Business</option><option value="geo">🌍 Geography</option></select>
+      <input class="lmin" type="number" id="logMin" placeholder="min" min="1" max="480" value="30">
+      <button class="lbtn" onclick="addLog()">+ Add</button>
+    </div>
+    <div class="trow"><span class="tlbl3">Today's total</span><span class="tval" id="totVal">0 min</span></div>
+    <div class="tbw"><div class="tb2" id="totBar" style="width:0%"></div></div>
+    <div style="font-size:9px;color:rgba(240,237,232,.18);margin-top:3px;text-align:right;">Target: 5 hrs / day</div>
+  </div>
+
+  <div class="ss">
+    <div class="st">4-Week Activity</div>
+    <div class="hlrow"><div class="hl">M</div><div class="hl">T</div><div class="hl">W</div><div class="hl">T</div><div class="hl">F</div><div class="hl">S</div><div class="hl">S</div></div>
+    <div class="hmap" id="hmap"></div>
+    <div class="hleg"><span class="hlgl">None</span><div class="hlgc h0"></div><div class="hlgc h1"></div><div class="hlgc h2"></div><div class="hlgc h3"></div><span class="hlgl">Intense</span></div>
+  </div>
+
+  <div class="ss">
+    <div class="st">Topic Coverage</div>
+    <div class="rings">
+      <div class="rw"><svg width="62" height="62" class="rsvg"><circle class="rbg" cx="31" cy="31" r="25"/><circle class="rc" cx="31" cy="31" r="25" stroke="#3b82f6" stroke-dasharray="157.1" stroke-dashoffset="157.1" id="re"/></svg><div class="rp" id="re-p">0%</div><div class="rl2">Econ</div></div>
+      <div class="rw"><svg width="62" height="62" class="rsvg"><circle class="rbg" cx="31" cy="31" r="25"/><circle class="rc" cx="31" cy="31" r="25" stroke="#f59e0b" stroke-dasharray="157.1" stroke-dashoffset="157.1" id="rb"/></svg><div class="rp" id="rb-p">0%</div><div class="rl2">Business</div></div>
+      <div class="rw"><svg width="62" height="62" class="rsvg"><circle class="rbg" cx="31" cy="31" r="25"/><circle class="rc" cx="31" cy="31" r="25" stroke="#10b981" stroke-dasharray="157.1" stroke-dashoffset="157.1" id="rg"/></svg><div class="rp" id="rg-p">0%</div><div class="rl2">Geo</div></div>
+    </div>
+  </div>
+
+  <div class="ss">
+    <div class="st">Exam Schedule 2026</div>
+    <div class="exams">
+      <div class="ex next"><div class="exdc"><div class="exmo">May</div><div class="exd">11</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Economics A · P1</div><div class="exp">Markets &amp; Business · 2h AM</div></div><div class="exb ee">Econ</div></div>
+      <div class="ex next"><div class="exdc"><div class="exmo">May</div><div class="exd">11</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Business · P1</div><div class="exp">Marketing &amp; People · 2h AM</div></div><div class="exb eb2">Biz</div></div>
+      <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">12</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Geography · P1</div><div class="exp">Physical Systems · 2h 15m AM</div></div><div class="exb eg">Geo</div></div>
+      <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">18</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Economics A · P2</div><div class="exp">UK Economy · 1h 30m AM</div></div><div class="exb ee">Econ</div></div>
+      <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">18</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Business · P2</div><div class="exp">Business Activities · 2h PM</div></div><div class="exb eb2">Biz</div></div>
+      <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">21</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Geography · P2</div><div class="exp">Human Interactions · PM</div></div><div class="exb eg">Geo</div></div>
+      <div class="ex"><div class="exdc"><div class="exmo">Jun</div><div class="exd">8</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Geography · P3</div><div class="exp">Geographical Debates · PM</div></div><div class="exb eg">Geo</div></div>
+    </div>
+  </div>
+
+</div><!-- /right -->
+</div><!-- /grid -->
+</div><!-- /page -->
+
+<footer id="mainFooter" style="display:none;">
+  <div class="fb2">
+    <img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/Franks_Media__1_-removebg-preview.png" alt="Franks Media">
+    <span class="ft">Revision Dashboard · Franks Media · A Levels 2026</span>
+  </div>
+  <span class="freset" onclick="if(confirm('Reset ALL saved data?')){localStorage.removeItem('fm_rev5');location.reload();}">Reset all data</span>
+</footer>
+
+<script>
+// ══════════════════════════════════════
+// PASSWORD
+// ══════════════════════════════════════
+function checkPw(){
+  var v=document.getElementById('pw-input').value.trim().toLowerCase();
+  if(v==='huddersfield'){
+    document.getElementById('pw-screen').style.display='none';
+    document.getElementById('mainPage').style.display='block';
+    document.getElementById('mainFooter').style.display='flex';
+    init();
+  } else {
+    var e=document.getElementById('pw-err');
+    e.textContent='Incorrect password';
+    document.getElementById('pw-input').value='';
+    setTimeout(function(){e.textContent='';},2000);
+  }
+}
+
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+var TD={
+  econ:[
+    {id:'e1',n:'Theme 1: Introduction to Markets & Market Failure',t:'Paper 1 · Foundation · DONE'},
+    {id:'e2',n:'Theme 2: The UK Economy — Performance & Policies',t:'Paper 2 · DONE'},
+    {id:'e3',n:'Theme 3: Business Behaviour & Labour Markets',t:'Paper 1 · DONE'},
+    {id:'e4',n:'Theme 4: Global Perspectives',t:'Paper 2/3 · TO DO ← Remaining'},
+    {id:'e5',n:'Past Papers — Timed Practice',t:'All papers · Exam prep'}
+  ],
+  biz:[
+    {id:'b1',n:'Theme 1: Marketing & People',t:'Paper 1 · DONE'},
+    {id:'b2',n:'Theme 2: Managing Business Activities',t:'Paper 1 · DONE'},
+    {id:'b3',n:'Theme 3: Business Decisions & Strategy',t:'Paper 2 · DONE'},
+    {id:'b4',n:'Theme 4: Global Business',t:'Paper 3 · TO DO ← Remaining'},
+    {id:'b5',n:'Past Papers — Timed Practice',t:'All papers · Exam prep'}
+  ],
+  geo:[
+    {id:'g1',n:'Glaciated Landscapes',t:'Paper 1 · Landscape Systems'},
+    {id:'g2',n:"Earth's Life Support Systems",t:'Paper 1 · Core'},
+    {id:'g3',n:'Changing Spaces; Making Places',t:'Paper 2 · Core'},
+    {id:'g4',n:'Powers & Borders',t:'Paper 2 · Optional'},
+    {id:'g5',n:'Global Migration',t:'Paper 2 · Optional'},
+    {id:'g6',n:'Hazardous Earth',t:'Paper 3 · Debate'},
+    {id:'g7',n:'Disease Dilemmas',t:'Paper 3 · Debate'},
+    {id:'g8',n:'Synoptic Essay Technique',t:'Paper 3 · Skill'}
+  ]
+};
+var PBARS={econ:'pe',biz:'pb',geo:'pg'};
+var SLABELS={econ:'📈 Economics',biz:'📊 Business',geo:'🌍 Geography'};
+var DOTCLS={econ:'de',biz:'db',geo:'dg'};
+
+// PAST PAPER QUESTION BANKS — rotated daily by day-of-year
+var PPQ={
+  econ:[
+    [{paper:'Paper 1 · 2024',marks:'[8 marks]',q:"'Governments should always use taxation rather than regulation to correct market failure.' Evaluate this view."},
+     {paper:'Paper 2 · 2023',marks:'[25 marks]',q:"Evaluate the effectiveness of monetary policy in achieving the macroeconomic objectives of the UK government."}],
+    [{paper:'Paper 1 · 2023',marks:'[5 marks]',q:"Explain two factors that might cause an increase in the price elasticity of demand for a product."},
+     {paper:'Paper 3 · 2022',marks:'[25 marks]',q:"Evaluate the extent to which free trade is beneficial to developing economies."}],
+    [{paper:'Paper 1 · 2022',marks:'[8 marks]',q:"Using a diagram, analyse the effect of a negative externality in production on allocative efficiency."},
+     {paper:'Paper 2 · 2024',marks:'[15 marks]',q:"Assess the likely impact of a rise in UK interest rates on the current account of the balance of payments."}],
+    [{paper:'Paper 1 · 2021',marks:'[4 marks]',q:"Explain the difference between a merit good and a public good. Give an example of each."},
+     {paper:'Paper 3 · 2023',marks:'[25 marks]',q:"To what extent does government intervention in labour markets improve economic welfare?"}],
+    [{paper:'Paper 2 · 2022',marks:'[8 marks]',q:"Analyse the likely effects of a rise in the national minimum wage on both workers and firms."},
+     {paper:'Paper 1 · 2024',marks:'[25 marks]',q:"Evaluate the view that monopoly is always harmful to consumers and the economy."}],
+    [{paper:'Paper 1 · 2023',marks:'[15 marks]',q:"Assess the likely microeconomic effects of a specific tax on producers of sugary drinks."},
+     {paper:'Paper 2 · 2021',marks:'[8 marks]',q:"Analyse why an increase in productivity might not lead to economic growth in a country."}],
+    [{paper:'Paper 3 · 2024',marks:'[25 marks]',q:"Evaluate the case for and against using supply-side policies to reduce structural unemployment in the UK."},
+     {paper:'Paper 1 · 2022',marks:'[5 marks]',q:"Explain two reasons why the price elasticity of supply for agricultural goods tends to be inelastic in the short run."}]
+  ],
+  biz:[
+    [{paper:'Paper 1 · 2024',marks:'[10 marks]',q:"Evaluate whether an increase in employee motivation will always lead to improved business performance."},
+     {paper:'Paper 2 · 2023',marks:'[20 marks]',q:"To what extent does financial performance data provide a reliable basis for making strategic decisions?"}],
+    [{paper:'Paper 1 · 2023',marks:'[6 marks]',q:"Analyse two factors that a business should consider when setting its pricing strategy in a competitive market."},
+     {paper:'Paper 3 · 2022',marks:'[20 marks]',q:"Evaluate the view that entering overseas markets is the most effective growth strategy for a UK business."}],
+    [{paper:'Paper 2 · 2024',marks:'[10 marks]',q:"Evaluate the likely impact of a change in the external environment on a business's human resource strategy."},
+     {paper:'Paper 1 · 2022',marks:'[6 marks]',q:"Analyse the benefits and drawbacks of job enrichment as a method of improving employee motivation."}],
+    [{paper:'Paper 1 · 2021',marks:'[4 marks]',q:"Explain two reasons why a business might choose to use lean production methods."},
+     {paper:'Paper 2 · 2022',marks:'[20 marks]',q:"To what extent does corporate culture determine the success of a business change programme?"}],
+    [{paper:'Paper 3 · 2023',marks:'[20 marks]',q:"Evaluate the importance of innovation in maintaining competitive advantage for businesses operating in a global market."},
+     {paper:'Paper 1 · 2024',marks:'[6 marks]',q:"Analyse the impact of changes in exchange rates on the competitiveness of a UK manufacturer."}],
+    [{paper:'Paper 2 · 2021',marks:'[10 marks]',q:"Evaluate the usefulness of investment appraisal methods when making major capital investment decisions."},
+     {paper:'Paper 1 · 2023',marks:'[4 marks]',q:"Explain two ways in which a business could use market research to reduce the risk of a new product launch."}],
+    [{paper:'Paper 3 · 2024',marks:'[20 marks]',q:"To what extent should a business prioritise ethical considerations over profit when making strategic decisions?"},
+     {paper:'Paper 2 · 2024',marks:'[6 marks]',q:"Analyse the impact on a business of having a high gearing ratio during a period of rising interest rates."}]
+  ],
+  geo:[
+    [{paper:'Paper 1 · 2024',marks:'[6 marks]',q:"Explain two ways in which glacial processes shape the landscape of a glaciated upland area."},
+     {paper:'Paper 3 · 2023',marks:'[20 marks]',q:"'Human factors are more important than physical factors in determining the impact of tectonic hazards.' Discuss. (Hazardous Earth)"}],
+    [{paper:'Paper 2 · 2023',marks:'[6 marks]',q:"Explain the concept of 'sense of place' and how it can vary between different groups of people in the same location."},
+     {paper:'Paper 1 · 2022',marks:'[12 marks]',q:"Assess the extent to which climate change is the main factor causing change in glaciated landscapes."}],
+    [{paper:'Paper 3 · 2022',marks:'[20 marks]',q:"Evaluate the success of strategies used to manage the spread and impact of infectious disease. (Disease Dilemmas)"},
+     {paper:'Paper 2 · 2024',marks:'[6 marks]',q:"Explain why international migration flows are uneven at a global scale. (Global Migration)"}],
+    [{paper:'Paper 1 · 2023',marks:'[8 marks]',q:"Using a case study, explain how feedback mechanisms affect the water cycle in a tropical rainforest."},
+     {paper:'Paper 2 · 2022',marks:'[12 marks]',q:"To what extent do geopolitical tensions shape patterns of global migration? (Powers &amp; Borders)"}],
+    [{paper:'Paper 3 · 2024',marks:'[20 marks]',q:"'The physical geography of a country is the main factor that determines its level of exposure to tectonic hazards.' Discuss. (Hazardous Earth)"},
+     {paper:'Paper 1 · 2021',marks:'[6 marks]',q:"Explain the role of freeze-thaw weathering in the formation of glaciated landscapes."}],
+    [{paper:'Paper 2 · 2021',marks:'[12 marks]',q:"Assess the degree to which globalisation has increased the challenges of managing state sovereignty. (Powers &amp; Borders)"},
+     {paper:'Paper 3 · 2021',marks:'[20 marks]',q:"Evaluate the extent to which the disease burden of LIDCs is mainly a result of environmental factors. (Disease Dilemmas)"}],
+    [{paper:'Paper 1 · 2024',marks:'[12 marks]',q:"Assess the extent to which human activity has altered the carbon cycle in the Amazon Basin."},
+     {paper:'Paper 2 · 2023',marks:'[6 marks]',q:"Explain how place attachment influences people's responses to urban regeneration. (Changing Spaces)"}]
+  ]
+};
+
+// DRONE IMAGES
+var DRONES=[
+  {src:'https://cdn.prod.website-files.com/67f845f932f268860becd300/67f845f932f268860becd389_Franks%20(5).jpg',loc:'Huddersfield, West Yorkshire',title:'Castle Hill',quote:'Breathe. Look at what you built from up here. You already see the world differently.'},
+  {src:'https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/DJI-0151-(2).jpg',loc:'Killybegs, County Donegal',title:'Fintra Beach',quote:'The same processes you\'re revising — coastal systems, sediment transport — shaped this beach. Geography is real.'},
+  {src:'https://i.postimg.cc/hPY664NS/DJI-0196-FF.jpg',loc:'County Donegal, Ireland',title:'Ardara',quote:'Every exam session is a flight plan. You know the route. Execute.'}
+];
+var fsIdx=0;
+
+function buildDroneReel(){
+  var reel=document.getElementById('droneReel');
+  DRONES.forEach(function(d,i){
+    var div=document.createElement('div');
+    div.className='drone-frame';
+    div.setAttribute('data-idx',i);
+    div.innerHTML='<img src="'+d.src+'" alt="'+d.title+'" loading="lazy">'+
+      '<div class="drone-frame-overlay"></div>'+
+      '<button class="drone-expand-btn" onclick="openFs('+i+',event)">⛶</button>'+
+      '<div class="drone-frame-caption">'+
+        '<div class="drone-cap-loc">'+d.loc+'</div>'+
+        '<div class="drone-cap-title">'+d.title+'</div>'+
+        '<div class="drone-cap-quote">'+d.quote+'</div>'+
+      '</div>';
+    div.onclick=function(e){if(e.target.classList.contains('drone-expand-btn'))return;openFs(i,e);};
+    reel.appendChild(div);
+  });
+  // Parallax scroll observer
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in-view');});
+  },{threshold:0.15});
+  document.querySelectorAll('.drone-frame').forEach(function(f){obs.observe(f);});
+}
+
+function openFs(idx,e){
+  if(e)e.stopPropagation();
+  fsIdx=idx;
+  document.getElementById('fsImg').src=DRONES[idx].src;
+  document.getElementById('fsCaption').textContent=DRONES[idx].title+' · '+DRONES[idx].loc;
+  document.getElementById('fsModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeFs(){document.getElementById('fsModal').classList.remove('open');document.body.style.overflow='';}
+function fsNav(dir){fsIdx=(fsIdx+dir+DRONES.length)%DRONES.length;document.getElementById('fsImg').src=DRONES[fsIdx].src;document.getElementById('fsCaption').textContent=DRONES[fsIdx].title+' · '+DRONES[fsIdx].loc;}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeFs();if(e.key==='ArrowLeft')fsNav(-1);if(e.key==='ArrowRight')fsNav(1);});
+
+// ══════════════════════════════════════
+// GB NEWS — direct from RSS data in context
+// ══════════════════════════════════════
+var GBN_STORIES=[
+  {title:"British schools assigned up to £700,000 to support non-English speaking students as costs hit record high",link:"https://www.gbnews.com/news/british-schools-assigned-up-to-700000-support-non-english-speaking-students-costs-hit-record-high",img:"https://www.gbnews.com/media-library/a-stock-image-of-school-children-in-a-classroom.jpg?id=33607588&width=400",time:"21m ago"},
+  {title:"NHS to sideline striking junior doctors as Easter walkout threatens chaos",link:"https://www.gbnews.com/news/nhs-striking-junior-doctors-easter-walkout",img:"https://www.gbnews.com/media-library/junior-doctors-strike.jpg?id=65469618&width=400",time:"51m ago"},
+  {title:"Two demonstrators arrested outside RAF base during peace protest against Iran war",link:"https://www.gbnews.com/news/suffolk-news-two-demonstrators-arrested-raf-base-peace-protest-against-iran-war",img:"https://www.gbnews.com/media-library/lakenheath-protest.png?id=65470676&width=400",time:"1h 33m ago"},
+  {title:"'Britain is going to the dogs!' Alex Armstrong delivers scathing assessment of Labour for 'legalising shoplifting'",link:"https://www.gbnews.com/politics/shoplifting-epidemic-alex-armstrong-delivers-scathing-assessment-labour-legalising-shoplifting",img:"https://www.gbnews.com/media-library/alex-armstrong.jpg?id=65470643&width=400",time:"1h 33m ago"},
+  {title:"Donald Trump warns 'time is running out' for Iran as he threatens to 'rain down all Hell' in 48-hour ultimatum",link:"https://www.gbnews.com/news/world/donald-trump-warns-time-running-out-iran-threatens-rain-down-all-hell-48-hour-ultimatum",img:"https://www.gbnews.com/media-library/trump.png?id=55080486&width=400",time:"1h 59m ago"},
+  {title:"'Nato would be paper without us!' Donald Trump's latest attack on defence alliance backed by GB News guest",link:"https://www.gbnews.com/politics/us/donald-trump-attack-nato-defended-gb-news-guest",img:"https://www.gbnews.com/media-library/aman-bhogal-donald-trump.jpg?id=65470418&width=400",time:"2h 52m ago"},
+  {title:"Royal Navy in talks to join US Independence Day celebrations despite Donald Trump insults",link:"https://www.gbnews.com/news/royal-navy-talks-join-us-independence-day-celebrations-despite-donald-trump-insults",img:"https://www.gbnews.com/media-library/hms-prince-of-wales.jpg?id=65167003&width=400",time:"2h 57m ago"},
+  {title:"'Words fail me!' Ex-Scotland Yard detective in disbelief after police leave bag of guns outside Sadiq Khan's home",link:"https://www.gbnews.com/news/sadiq-khan-ex-scotland-yard-detective-disbelief-police-leave-bag-guns-outside-home",img:"https://www.gbnews.com/media-library/hamish-brown-sadiq-khan.jpg?id=65470077&width=400",time:"3h 52m ago"},
+  {title:"Met Office issues rare 'danger to life' amber alert as Storm Dave to bring hurricane-force winds",link:"https://www.gbnews.com/weather/met-office-amber-warning-storm-dave",img:"https://www.gbnews.com/media-library/weather-warning.png?id=65467624&width=400",time:"7h 53m ago"},
+  {title:"Detectorist makes 'once-in-a-lifetime' medieval discovery branded 'one of the most significant' archaeological finds",link:"https://www.gbnews.com/science/archaeology-breakthrough-anglo-saxon-ring-detectorist-lincolshire-news",img:"https://www.gbnews.com/media-library/detectorist-looking-for-treasure.jpg?id=65469218&width=400",time:"5h 24m ago"},
+  {title:"US special forces rescue team faces 'harrowing and dangerous' search for crew member downed over Iran",link:"https://www.gbnews.com/news/world/iran/iran-fighter-jet-rescue-special-forces-pararescue-us-news",img:"https://www.gbnews.com/media-library/us-pararescue-jumper.jpg?id=65467124&width=400",time:"8h 19m ago"},
+  {title:"Murdered MP's daughter slams Keir Starmer's Troubles bill — 'What happened to reconciliation?'",link:"https://www.gbnews.com/news/northern-ireland-news-airey-neave-daugther-slams-keir-starmer-troubles-legislation",img:"https://www.gbnews.com/media-library/airey-neave-sir-keir-starmer.png?id=65467106&width=400",time:"8h 43m ago"},
+  {title:"Churchyard memorial destroyed by senseless vandals in 'devastating' attack",link:"https://www.gbnews.com/news/essex-news-churchyard-memorial-destroyed-senseless-vandals-devastating-attack",img:"https://www.gbnews.com/media-library/churchyard.png?id=65470552&width=400",time:"2h 3m ago"}
+];
+var newsShown=6;
+function renderNews(){
+  var c=document.getElementById('newsList');c.innerHTML='';
+  GBN_STORIES.slice(0,newsShown).forEach(function(s){
+    var d=document.createElement('div');d.className='ni';
+    d.onclick=function(){window.open(s.link,'_blank');};
+    d.innerHTML='<img class="ni-img" src="'+s.img+'" onerror="this.style.display=\'none\'" loading="lazy">'+
+      '<div class="ni-body"><div class="ni-title">'+s.title+'</div>'+
+      '<div class="ni-meta"><span>'+s.time+'</span><span class="ni-cat">GB News</span></div></div>';
+    c.appendChild(d);
+  });
+  document.getElementById('newsMore').style.display=newsShown<GBN_STORIES.length?'block':'none';
+}
+function showMoreNews(){newsShown+=6;renderNews();}
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+function loadState(){
+  try{var r=localStorage.getItem('fm_rev5');if(r)return JSON.parse(r);}catch(e){}
+  return {topics:{e1:true,e2:true,e3:true,b1:true,b2:true,b3:true},log:[],hmap:{},sessions:0,days:{}};
+}
+function save(){
+  try{
+    localStorage.setItem('fm_rev5',JSON.stringify(S));
+    var el=document.getElementById('saveInd');
+    el.textContent='✓ saved';el.classList.add('ok');
+    setTimeout(function(){el.textContent='auto-saving';el.classList.remove('ok');},1200);
+  }catch(e){}
+}
+var S=loadState();
+function zp(n){return String(n).padStart(2,'0');}
+function todayKey(){var d=new Date();return d.getFullYear()+'-'+zp(d.getMonth()+1)+'-'+zp(d.getDate());}
+function fmtKey(k){var p=k.split('-');var mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return parseInt(p[2])+' '+mn[parseInt(p[1])-1];}
+
+// NAV DATE
+function setNavDate(){
+  var d=new Date();
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('navDate').textContent=days[d.getDay()]+', '+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
+}
+
+// COUNTDOWN
+function cd(){
+  var t=new Date('2026-05-11T09:00:00'),n=new Date(),diff=t-n;
+  if(diff<0)return;
+  document.getElementById('cd-d').textContent=zp(Math.floor(diff/864e5));
+  document.getElementById('cd-h').textContent=zp(Math.floor((diff%864e5)/36e5));
+  document.getElementById('cd-m').textContent=zp(Math.floor((diff%36e5)/6e4));
+  document.getElementById('cd-s').textContent=zp(Math.floor((diff%6e4)/1e3));
+}
+
+// TABS
+function switchTab(s,btn){
+  document.querySelectorAll('.sp').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.className='tab';});
+  document.getElementById('sp-'+s).classList.add('active');
+  btn.classList.add({econ:'ae',biz:'ab',geo:'ag'}[s]);
+}
+
+// TOPICS
+function renderTopics(s){
+  var c=document.getElementById('tg-'+s);c.innerHTML='';
+  var done=0;
+  TD[s].forEach(function(t){
+    var d=!!S.topics[t.id];if(d)done++;
+    var div=document.createElement('div');
+    div.className='tc'+(d?' done':'');
+    div.setAttribute('data-id',t.id);div.setAttribute('data-s',s);
+    div.innerHTML='<div class="tchk">'+(d?'✓':'')+'</div><div class="tn">'+t.n+'</div><div class="tt">'+t.t+'</div><div class="tbar"><div class="tbf '+PBARS[s]+'" style="width:'+(d?100:0)+'%"></div></div>';
+    div.onclick=function(){toggleT(this);};
+    c.appendChild(div);
+  });
+  var cnt=document.getElementById(s+'-cnt');if(cnt)cnt.textContent=done+' / '+TD[s].length+' done';
+  return done;
+}
+function toggleT(el){
+  var id=el.getAttribute('data-id'),s=el.getAttribute('data-s');
+  if(S.topics[id])delete S.topics[id];else S.topics[id]=true;
+  save();renderTopics(s);updateRings();updateStats();
+}
+
+// PAST PAPER QUESTIONS — rotate by day of year
+function renderPPQ(){
+  var doy=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/864e5);
+  ['econ','biz','geo'].forEach(function(s){
+    var bank=PPQ[s];
+    var set=bank[doy%bank.length];
+    var c=document.getElementById('ppq-'+s);if(!c)return;
+    c.innerHTML='';
+    set.forEach(function(q){
+      var div=document.createElement('div');div.className='ppq-item';
+      div.innerHTML='<div class="ppq-meta"><span>'+q.paper+'</span></div><div class="ppq-q">'+q.q+'</div><div class="ppq-marks">'+q.marks+'</div>';
+      c.appendChild(div);
+    });
+  });
+}
+
+// RINGS
+function updateRings(){
+  [{s:'econ',id:'re',el:'re-p'},{s:'biz',id:'rb',el:'rb-p'},{s:'geo',id:'rg',el:'rg-p'}].forEach(function(r){
+    var total=TD[r.s].length;
+    var done=TD[r.s].filter(function(t){return!!S.topics[t.id];}).length;
+    var pct=Math.round(done/total*100);
+    document.getElementById(r.id).style.strokeDashoffset=157.1-(157.1*pct/100);
+    document.getElementById(r.el).textContent=pct+'%';
+  });
+}
+
+// STATS
+function updateStats(){
+  var totalDone=Object.keys(S.topics).filter(function(k){return S.topics[k];}).length;
+  document.getElementById('sStat').textContent=totalDone;
+  var totalMins=S.log.reduce(function(a,e){return a+e.mins;},0);
+  var h=Math.floor(totalMins/60),m=totalMins%60;
+  document.getElementById('hStat').textContent=h>0?h+'h':m+'m';
+  document.getElementById('dStat').textContent=Object.keys(S.days).length;
+}
+
+// LOG
+function addLog(){
+  var subj=document.getElementById('logSubj').value;
+  var mins=parseInt(document.getElementById('logMin').value)||0;
+  if(mins<1)return;
+  var today=todayKey();
+  S.log.push({date:today,subj:subj,mins:mins,id:Date.now()});
+  S.days[today]=true;
+  var tm=S.log.filter(function(e){return e.date===today;}).reduce(function(a,e){return a+e.mins;},0);
+  S.hmap[today]=tm>=180?3:tm>=90?2:tm>=30?1:0;
+  save();renderLog();updateStats();renderHmap();
+  document.getElementById('logMin').value=30;
+}
+function delLog(id){
+  S.log=S.log.filter(function(e){return e.id!==id;});
+  var today=todayKey();
+  var tm=S.log.filter(function(e){return e.date===today;}).reduce(function(a,e){return a+e.mins;},0);
+  if(tm>0)S.hmap[today]=tm>=180?3:tm>=90?2:tm>=30?1:0;else delete S.hmap[today];
+  save();renderLog();updateStats();renderHmap();
+}
+function renderLog(){
+  var today=todayKey();
+  var entries=S.log.filter(function(e){return e.date===today;});
+  var c=document.getElementById('logList');c.innerHTML='';
+  if(!entries.length){c.innerHTML='<div style="font-size:11px;color:rgba(240,237,232,.2);padding:8px 0;text-align:center;">Nothing logged today yet</div>';}
+  else{entries.forEach(function(e){var d=document.createElement('div');d.className='le';d.innerHTML='<div class="ls"><div class="ld '+DOTCLS[e.subj]+'"></div>'+SLABELS[e.subj]+'</div><div class="lr"><div class="lm">'+e.mins+' min</div><div class="ldel" onclick="delLog('+e.id+')">×</div></div>';c.appendChild(d);});}
+  var tm=entries.reduce(function(a,e){return a+e.mins;},0);
+  var h=Math.floor(tm/60),m=tm%60;
+  document.getElementById('totVal').textContent=h>0?h+'h '+m+'m':m+' min';
+  document.getElementById('totBar').style.width=Math.min(100,Math.round(tm/300*100))+'%';
+}
+
+// HEATMAP
+function renderHmap(){
+  var c=document.getElementById('hmap');c.innerHTML='';
+  var today=new Date();today.setHours(0,0,0,0);
+  var dow=today.getDay(),dfm=dow===0?6:dow-1;
+  var start=new Date(today);start.setDate(start.getDate()-dfm-21);
+  for(var i=0;i<28;i++){
+    var d=new Date(start);d.setDate(d.getDate()+i);
+    var k=d.getFullYear()+'-'+zp(d.getMonth()+1)+'-'+zp(d.getDate());
+    var future=d>today,isToday=d.getTime()===today.getTime();
+    var lvl=future?0:(S.hmap[k]||0);
+    var cell=document.createElement('div');
+    cell.className='hc h'+lvl+(isToday?' htday':'');
+    cell.title=fmtKey(k)+': '+['No study','Light','Moderate','Intense'][lvl];
+    if(!future)(function(key,el){el.onclick=function(){S.hmap[key]=((S.hmap[key]||0)+1)%4;if(!S.hmap[key])delete S.hmap[key];save();renderHmap();};})(k,cell);
+    c.appendChild(cell);
+  }
+}
+
+// TIMER
+var tInt=null,tSecs=25*60,tTotal=25*60,tRunning=false;
+function setPreset(m,el){if(tRunning)return;document.querySelectorAll('.preset').forEach(function(p){p.classList.remove('active');});el.classList.add('active');tSecs=m*60;tTotal=m*60;updT();document.getElementById('tBar').style.width='0%';document.getElementById('tLbl').textContent='Ready to focus';}
+function updT(){var m=Math.floor(tSecs/60),s=tSecs%60;document.getElementById('tDisp').textContent=zp(m)+':'+zp(s);}
+function toggleTimer(){
+  if(tRunning){clearInterval(tInt);tRunning=false;document.getElementById('tBtn').textContent='▶ Resume';document.getElementById('tLbl').textContent='Paused';}
+  else{tRunning=true;document.getElementById('tBtn').textContent='⏸ Pause';document.getElementById('tLbl').textContent='Focusing…';
+    tInt=setInterval(function(){
+      if(tSecs<=0){clearInterval(tInt);tRunning=false;S.sessions=(S.sessions||0)+1;save();document.getElementById('sess-ct').textContent=S.sessions+' session'+(S.sessions===1?'':'s');document.getElementById('tBtn').textContent='▶ Start';document.getElementById('tLbl').textContent='✓ Session complete!';document.getElementById('tDisp').textContent='Done!';document.getElementById('tBar').style.width='100%';}
+      else{tSecs--;updT();document.getElementById('tBar').style.width=((tTotal-tSecs)/tTotal*100)+'%';}
+    },1000);
+  }
+}
+function resetTimer(){clearInterval(tInt);tRunning=false;tSecs=tTotal;updT();document.getElementById('tBar').style.width='0%';document.getElementById('tBtn').textContent='▶ Start';document.getElementById('tLbl').textContent='Ready to focus';}
+
+// QUOTES
+var QS=['You already run a business. These exams are just the next deal to close — and you\'ve done your due diligence.',
+'Sheffield Hallam: 1st in the UK for Real Estate graduate outcomes. That journey starts right here, right now.',
+'The best property developers understand markets, strategy, and place. You\'re studying all three simultaneously.',
+'Your drone shots prove you see the world differently. Write your answers the same way — step back, see the whole system.',
+'37 days. Broken into sessions, it\'s entirely manageable. One focused block at a time.',
+'Consistency beats intensity. Three hours every day beats twelve hours the night before.',
+'Hard work beats talent when talent doesn\'t work hard. You have both — so use them.',
+'Every past paper you practise is a conversation with the examiner before exam day. Practise the conversation.'];
+document.getElementById('qTxt').textContent=QS[Math.floor(Math.random()*QS.length)];
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+function init(){
+  setNavDate();
+  cd();setInterval(cd,1000);
+  ['econ','biz','geo'].forEach(function(s){renderTopics(s);});
+  updateRings();renderLog();renderHmap();updateStats();renderPPQ();
+  buildDroneReel();
+  renderNews();
+  if(S.sessions)document.getElementById('sess-ct').textContent=S.sessions+' sessions';
+}
+</script>
+</body>
+</html>
