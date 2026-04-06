@@ -234,6 +234,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;justify-content
 .timer-presets{display:flex;gap:7px;flex-wrap:wrap;}
 .tpre{flex:1;min-width:46px;padding:10px 5px;border-radius:9px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--b);background:var(--s);color:#ccc;transition:all .2s;text-align:center;}
 .tpre:hover,.tpre.act{background:rgba(0,87,168,.18);border-color:rgba(0,87,168,.55);color:var(--bl);}
+.custom-timer-row{display:flex;gap:7px;margin-top:2px;}
+.custom-timer-input{flex:1;padding:9px 11px;background:var(--s);border:1px solid var(--b);border-radius:9px;color:#f0ede8;font-family:'Outfit',sans-serif;font-size:14px;outline:none;min-width:0;}
+.custom-timer-input:focus{border-color:rgba(77,163,255,.5);}
+.custom-timer-input::placeholder{color:#555;}
+.custom-timer-btn{padding:9px 16px;background:rgba(77,163,255,.12);border:1px solid rgba(77,163,255,.3);border-radius:9px;color:var(--bl);font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.custom-timer-btn:hover{background:rgba(77,163,255,.22);}
 .tbtns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .tbtn{padding:13px;border-radius:11px;font-family:'Outfit',sans-serif;font-size:clamp(12px,1.8vw,14px);font-weight:600;cursor:pointer;border:none;transition:all .2s;}
 .tstart{background:var(--blue);color:#fff;}
@@ -688,6 +694,10 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
             <div class="tpre" onclick="setPreset(45,this)">45m</div>
             <div class="tpre" onclick="setPreset(60,this)">60m</div>
             <div class="tpre" onclick="setPreset(90,this)">90m</div>
+          </div>
+          <div class="custom-timer-row">
+            <input class="custom-timer-input" id="customMins" type="number" min="1" max="480" placeholder="Custom mins" onkeydown="if(event.key==='Enter')setCustomTimer()">
+            <button class="custom-timer-btn" onclick="setCustomTimer()">Set</button>
           </div>
           <div class="tbtns">
             <button class="tbtn tstart" id="tBtn" onclick="toggleTimer()">▶ Start</button>
@@ -1482,6 +1492,24 @@ function setPreset(m,el){
   document.getElementById('tBar').style.width='0%';
   document.getElementById('tLbl').textContent='Ready to focus';
   document.getElementById('tDisp').classList.remove('running');
+}
+function setCustomTimer(){
+  if(tRunning)return;
+  var inp=document.getElementById('customMins');
+  var m=parseInt(inp.value);
+  if(!m||m<1||m>480){
+    inp.style.borderColor='rgba(248,113,113,.7)';
+    setTimeout(function(){inp.style.borderColor='';},1200);
+    return;
+  }
+  // Deselect all presets
+  document.querySelectorAll('.tpre').forEach(function(p){p.classList.remove('act');});
+  tSecs=m*60;tTotal=m*60;updT();
+  document.getElementById('tBar').style.width='0%';
+  document.getElementById('tLbl').textContent='Custom: '+m+' min — ready to focus';
+  document.getElementById('tDisp').classList.remove('running');
+  inp.value='';
+  inp.blur();
 }
 function updT(){var m=Math.floor(tSecs/60),s=tSecs%60;document.getElementById('tDisp').textContent=zp(m)+':'+zp(s);}
 function toggleTimer(){
