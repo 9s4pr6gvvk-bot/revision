@@ -673,7 +673,7 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
     </div>
     <div class="fm-top-right">
       <button class="fm-tiny-btn" id="fm-sound-btn" onclick="toggleFmSound()">
-        <img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/revision/refs/heads/main/Logo.png" alt="Midwest Radio" style="height:18px;vertical-align:middle;filter;opacity:.7;margin-right:5px;">
+        <img src="https://www.midwestradio.ie/wp-content/uploads/2024/10/Logo.webp" alt="Midwest Radio" style="height:18px;vertical-align:middle;filter:brightness(0) invert(1);opacity:.7;margin-right:5px;">
         <span id="fm-sound-lbl">Radio Off</span>
       </button>
       <button class="fm-tiny-btn" onclick="exitFocus()">✕ Exit</button>
@@ -966,7 +966,7 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
           </div>
           <div class="tot-row"><span class="tot-lbl">Today's total</span><span class="tot-val" id="totVal">0 min</span></div>
           <div class="tot-bw"><div class="tot-b" id="totBar" style="width:0%"></div></div>
-          <div style="font-size:11px;color:#555;margin-top:3px;text-align:right;">Target: 5 hours / day</div>
+          <div style="font-size:11px;color:#555;margin-top:3px;text-align:right;">Target: 4 hours / day</div>
         </div>
         <div class="hmap-wrap">
           <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#f0ede8;margin-bottom:11px;">📅 4-Week Activity</div>
@@ -1761,7 +1761,7 @@ function addLog(){
   S.log.push({date:today,subj:subj,mins:mins,id:Date.now()});
   S.days[today]=true;
   var tm=S.log.filter(function(e){return e.date===today;}).reduce(function(a,e){return a+e.mins;},0);
-  S.hmap[today]=tm>=300?3:tm>=180?2:tm>=60?1:0;
+  S.hmap[today]=tm>=240?3:tm>=150?2:tm>=60?1:0;
   S.hmapMins[today]=tm;
   save();renderLog();updateStats();renderHmap();
   document.getElementById('logMin').value=30;
@@ -1771,7 +1771,7 @@ function delLog(id){
   var today=todayKey();
   var tm=S.log.filter(function(e){return e.date===today;}).reduce(function(a,e){return a+e.mins;},0);
   S.hmapMins[today]=tm;
-  if(tm>0)S.hmap[today]=tm>=300?3:tm>=180?2:tm>=60?1:0;
+  if(tm>0)S.hmap[today]=tm>=240?3:tm>=150?2:tm>=60?1:0;
   else{delete S.hmap[today];delete S.hmapMins[today];}
   save();renderLog();updateStats();renderHmap();
 }
@@ -1791,7 +1791,7 @@ function renderLog(){
   var tm=entries.reduce(function(a,e){return a+e.mins;},0);
   var h=Math.floor(tm/60),m=tm%60;
   document.getElementById('totVal').textContent=h>0?h+'h '+m+'m':m+' min';
-  document.getElementById('totBar').style.width=Math.min(100,Math.round(tm/300*100))+'%';
+  document.getElementById('totBar').style.width=Math.min(100,Math.round(tm/240*100))+'%';
 }
 
 // ═══════════════════════════════════════════════════
