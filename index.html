@@ -215,7 +215,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;justify-content
 .gbn-live-dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:blink 1s infinite;}
 .gbn-live-open{background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;}
 .gbn-live-open:hover{background:rgba(255,255,255,.25);}
-.gbn-live-embed{position:relative;width:100%;padding-top:56.25%;}
+.alerts-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14) !important;color:#888;}
+.alerts-btn:hover{background:rgba(255,255,255,.12);}
+.alerts-btn.muted{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3) !important;color:#6ee7b7;}
 .gbn-live-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:none;display:block;}
 .gbn-live-play-btn{width:60px;height:60px;background:rgba(185,28,28,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;border:2px solid rgba(255,255,255,.3);transition:all .2s;}
 
@@ -624,6 +626,7 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
     <button class="nav-btn gbn-btn-nav" onclick="openGbnLiveFs()">📺 GB News Live</button>
     <button class="nav-btn games-btn" onclick="openGame()">🎮 Break Game</button>
     <button class="nav-btn focus-btn" onclick="enterFocus()">⚡ Focus Mode</button>
+    <button class="nav-btn alerts-btn" id="alertsToggleBtn" onclick="toggleAlerts()">🔕 Mute Alerts</button>
     <div class="ntag"><div class="pd"></div>Revision Mode</div>
   </div>
 </nav>
@@ -1050,9 +1053,9 @@ function closeGbnLiveFs(){
 
 // Top-of-hour check
 function checkTopOfHour(){
+  if(alertsMuted)return; // respect opt-out
   var now=new Date();
   var mins=now.getMinutes(),secs=now.getSeconds();
-  // Trigger within first 20 seconds of any hour
   if(mins===0&&secs<20){
     if(!checkTopOfHour._lastHour||checkTopOfHour._lastHour!==now.getHours()){
       checkTopOfHour._lastHour=now.getHours();
@@ -1064,8 +1067,30 @@ function checkTopOfHour(){
 // ═══════════════════════════════════════════════════
 // BREAKING NEWS
 // ═══════════════════════════════════════════════════
-var bnFsTimeout=null,bnTickTimeout=null;
-function triggerBreaking(headline,skipTicker){
+var alertsMuted=localStorage.getItem('fm_alerts_muted')==='1';
+function toggleAlerts(){
+  alertsMuted=!alertsMuted;
+  localStorage.setItem('fm_alerts_muted',alertsMuted?'1':'0');
+  updateAlertsBtn();
+}
+function updateAlertsBtn(){
+  var btn=document.getElementById('alertsToggleBtn');
+  if(!btn)return;
+  if(alertsMuted){
+    btn.textContent='🔔 Alerts On';
+    btn.classList.add('muted');
+  } else {
+    btn.textContent='🔕 Mute Alerts';
+    btn.classList.remove('muted');
+  }
+}
+function triggerBreaking(headline,skipTicker,force){
+  // If alerts muted, skip fullscreen unless manually forced (force=true)
+  if(alertsMuted&&!force){
+    // Still show ticker bar even when muted (less intrusive)
+    if(!skipTicker)showTicker(headline);
+    return;
+  }
   document.getElementById('bn-fs-headline').textContent=headline;
   var bar=document.getElementById('bn-fs-bar');
   bar.style.transition='none';bar.style.width='100%';
@@ -1815,6 +1840,7 @@ document.getElementById('qTxt').textContent=QUOTES[doy()%QUOTES.length];
 // ═══════════════════════════════════════════════════
 function init(){
   setNavDate();
+  updateAlertsBtn();
   cd();setInterval(cd,1000);
   // Top-of-hour check every 15 seconds
   setInterval(checkTopOfHour,15000);
