@@ -190,26 +190,80 @@ img{display:block;max-width:100%;}
 .mem-card.matched{background:rgba(16,185,129,.18);border-color:rgba(16,185,129,.45);cursor:default;}
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;justify-content:space-between;align-items:center;padding:0 28px;height:68px;background:rgba(8,8,8,.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.09);}
-.nlogo img{height:46px;filter:brightness(0) invert(1);}
-.nr{display:flex;align-items:center;gap:10px;}
-.ndate{font-size:11px;letter-spacing:.07em;color:#666;text-transform:uppercase;}
-.ntag{display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid rgba(0,87,168,.4);border-radius:100px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--bl);}
-.pd{width:5px;height:5px;border-radius:50%;background:var(--bl);animation:blink 2s ease-in-out infinite;}
-.svi{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#555;transition:color .3s;}
+nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;justify-content:space-between;align-items:center;padding:0 24px;height:62px;background:rgba(8,8,8,.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.07);}
+.nlogo img{height:40px;filter:brightness(0) invert(1);}
+.nr{display:flex;align-items:center;gap:6px;}
+.ndate{font-size:11px;letter-spacing:.06em;color:#555;text-transform:uppercase;margin-right:6px;}
+.svi{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#444;transition:color .3s;margin-right:4px;}
 .svi.ok{color:#10b981;}
-.nav-btn{padding:6px 13px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;border:none;}
-.focus-btn{background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.28) !important;color:var(--bl);}
-.focus-btn:hover{background:rgba(77,163,255,.2);}
-.games-btn{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.28) !important;color:#6ee7b7;}
-.games-btn:hover{background:rgba(16,185,129,.2);}
-.gbn-btn-nav{background:rgba(185,28,28,.18);border:1px solid rgba(185,28,28,.4) !important;color:#fca5a5;}
-.gbn-btn-nav:hover{background:rgba(185,28,28,.3);}
+/* Icon-style nav buttons */
+.nav-btn{padding:7px 11px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid transparent;background:transparent;color:#666;position:relative;}
+.nav-btn:hover{background:rgba(255,255,255,.07);color:#ccc;}
+.nav-btn .nb-icon{font-size:15px;display:block;}
+.nav-btn .nb-label{font-size:10px;display:block;letter-spacing:.05em;margin-top:1px;white-space:nowrap;}
+/* Coloured accents on hover only */
+.focus-btn:hover{background:rgba(77,163,255,.12);color:var(--bl);border-color:rgba(77,163,255,.2);}
+.games-btn:hover{background:rgba(16,185,129,.1);color:#6ee7b7;border-color:rgba(16,185,129,.2);}
+.gbn-btn-nav:hover{background:rgba(185,28,28,.15);color:#fca5a5;border-color:rgba(185,28,28,.3);}
+.alerts-btn{color:#6ee7b7;background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.25) !important;}
+.alerts-btn:hover{background:rgba(16,185,129,.14);}
+.alerts-btn.muted{color:#f87171;background:rgba(185,28,28,.1);border-color:rgba(185,28,28,.3) !important;}
+.alerts-btn.muted:hover{background:rgba(185,28,28,.18);}
+.nav-divider{width:1px;height:28px;background:rgba(255,255,255,.07);margin:0 4px;}
+.nav-live-dot{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#f87171;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border:1px solid rgba(185,28,28,.3);border-radius:20px;background:rgba(185,28,28,.08);}
+.nav-live-dot span{width:5px;height:5px;border-radius:50%;background:#f87171;animation:blink 1s infinite;}
 
 /* ── PAGE ── */
-.page{padding-top:88px;max-width:1280px;margin:0 auto;padding-left:24px;padding-right:24px;padding-bottom:60px;}
-.sec{margin-bottom:40px;}
-.sec-title{font-family:'Syne',sans-serif;font-size:clamp(16px,2.5vw,20px);font-weight:800;color:#f0ede8;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.page{padding-top:80px;max-width:1280px;margin:0 auto;padding-left:24px;padding-right:24px;padding-bottom:60px;}
+.sec{margin-bottom:36px;}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(15px,2.2vw,18px);font-weight:800;color:#f0ede8;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+
+/* ── PAGE LAYOUT: two-column sidebar approach ── */
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;}
+.main-col{min-width:0;}
+.side-col{display:flex;flex-direction:column;gap:20px;}
+@media(max-width:1060px){.main-layout{grid-template-columns:1fr;}.side-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex-direction:unset;}}
+@media(max-width:640px){.main-layout{grid-template-columns:1fr;}.side-col{grid-template-columns:1fr;}}
+
+/* ── CHECKLIST ── */
+.checklist-card{background:var(--s);border:1px solid var(--b);border-radius:16px;overflow:hidden;}
+.checklist-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.07);}
+.cl-tab{flex:1;padding:11px 8px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#666;transition:all .2s;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.cl-tab.on{color:#f0ede8;border-bottom-color:var(--bl);}
+.cl-tab:hover:not(.on){color:#aaa;}
+.cl-body{padding:14px 16px;}
+.cl-input-row{display:flex;gap:7px;margin-bottom:12px;}
+.cl-input{flex:1;padding:9px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#f0ede8;font-family:'Outfit',sans-serif;font-size:14px;outline:none;}
+.cl-input:focus{border-color:rgba(255,255,255,.22);}
+.cl-input::placeholder{color:#444;}
+.cl-add-btn{padding:9px 14px;background:var(--blue);border:none;border-radius:9px;color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.cl-add-btn:hover{background:#006ad4;}
+.cl-list{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow-y:auto;}
+.cl-item{display:flex;align-items:center;gap:9px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;cursor:pointer;transition:all .2s;group:true;}
+.cl-item:hover{background:rgba(255,255,255,.06);}
+.cl-item.done{opacity:.5;}
+.cl-item.done .cl-text{text-decoration:line-through;color:#666;}
+.cl-check{width:18px;height:18px;border-radius:5px;border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;transition:all .2s;}
+.cl-item.done .cl-check{background:#10b981;border-color:#10b981;color:#fff;}
+.cl-text{flex:1;font-size:13px;color:#ddd;line-height:1.4;}
+.cl-del{font-size:14px;color:#333;cursor:pointer;transition:color .2s;flex-shrink:0;padding:0 2px;}
+.cl-del:hover{color:#f87171;}
+.cl-empty{font-size:13px;color:#444;text-align:center;padding:16px 0;font-style:italic;}
+.cl-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);}
+.cl-count{font-size:11px;color:#555;}
+.cl-clear{font-size:11px;color:#444;cursor:pointer;text-decoration:underline;}
+.cl-clear:hover{color:#f87171;}
+
+/* ── PINNED NOTES ── */
+.pinned-notes-card{background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(245,158,11,.02));border:1px solid rgba(245,158,11,.22);border-radius:16px;padding:16px;}
+.pn-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.pn-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#f0ede8;}
+.pn-tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#fcd34d;font-weight:600;}
+.pn-area{width:100%;min-height:100px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:9px;color:#f0ede8;font-family:'Outfit',sans-serif;font-size:13px;line-height:1.7;padding:10px 12px;outline:none;resize:vertical;}
+.pn-area:focus{border-color:rgba(245,158,11,.3);}
+.pn-area::placeholder{color:#3a3020;}
+.pn-saved{font-size:11px;color:#555;margin-top:6px;transition:color .3s;}
+.pn-saved.ok{color:#10b981;}
 
 /* ── TOP GRID ── */
 .top-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:40px;}
@@ -246,9 +300,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;justify-content
 .gbn-live-dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:blink 1s infinite;}
 .gbn-live-open{background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;}
 .gbn-live-open:hover{background:rgba(255,255,255,.25);}
-.alerts-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14) !important;color:#888;}
-.alerts-btn:hover{background:rgba(255,255,255,.12);}
-.alerts-btn.muted{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3) !important;color:#6ee7b7;}
 .gbn-live-embed{position:relative;width:100%;padding-top:56.25%;background:#000;max-height:260px;overflow:hidden;}
 .gbn-live-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:none;display:block;}
 .gbn-live-play-btn{width:60px;height:60px;background:rgba(185,28,28,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;border:2px solid rgba(255,255,255,.3);transition:all .2s;}
@@ -621,7 +672,10 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
       <div class="fm-session-badge" id="fm-session-badge">Session 1</div>
     </div>
     <div class="fm-top-right">
-      <button class="fm-tiny-btn" id="fm-sound-btn" onclick="toggleFmSound()">🔇 Sound</button>
+      <button class="fm-tiny-btn" id="fm-sound-btn" onclick="toggleFmSound()">
+        <img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/revision/refs/heads/main/Logo.png" alt="Midwest Radio" style="height:18px;vertical-align:middle;filter;opacity:.7;margin-right:5px;">
+        <span id="fm-sound-lbl">Radio Off</span>
+      </button>
       <button class="fm-tiny-btn" onclick="exitFocus()">✕ Exit</button>
     </div>
   </div>
@@ -692,12 +746,22 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
   <div class="nlogo"><img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/Franks_Media__1_-removebg-preview.png" alt="Franks Media"></div>
   <div class="nr">
     <span class="ndate" id="navDate"></span>
-    <span class="svi" id="svi">auto-saving</span>
-    <button class="nav-btn gbn-btn-nav" onclick="openGbnLiveFs()">📺 GB News Live</button>
-    <button class="nav-btn games-btn" onclick="openGame()">🎮 Break Game</button>
-    <button class="nav-btn focus-btn" onclick="enterFocus()">⚡ Focus Mode</button>
-    <button class="nav-btn alerts-btn" id="alertsToggleBtn" onclick="toggleAlerts()">🔕 Mute Alerts</button>
-    <div class="ntag"><div class="pd"></div>Revision Mode</div>
+    <span class="svi" id="svi">saving</span>
+    <div class="nav-divider"></div>
+    <button class="nav-btn gbn-btn-nav" onclick="openGbnLiveFs()" title="GB News Live">
+      <span class="nb-icon">📺</span><span class="nb-label">GB News</span>
+    </button>
+    <button class="nav-btn games-btn" onclick="openGame()" title="Break Games">
+      <span class="nb-icon">🎮</span><span class="nb-label">Games</span>
+    </button>
+    <button class="nav-btn focus-btn" onclick="enterFocus()" title="Focus Mode">
+      <span class="nb-icon">⚡</span><span class="nb-label">Focus</span>
+    </button>
+    <div class="nav-divider"></div>
+    <button class="nav-btn alerts-btn" id="alertsToggleBtn" onclick="toggleAlerts()" title="Toggle fullscreen news alerts">
+      <span class="nb-icon" id="alerts-icon">🔔</span><span class="nb-label" id="alerts-label">Alerts: ON</span>
+    </button>
+    <div class="nav-live-dot"><span></span>LIVE</div>
   </div>
 </nav>
 
@@ -705,7 +769,7 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
 <div class="page" id="mainPage" style="display:none;">
 
   <!-- TOP: Countdown + Stats -->
-  <div class="top-grid">
+  <div class="top-grid" style="margin-bottom:24px;">
     <div class="cd-wrap">
       <div class="cd-lbl">First Exam Countdown</div>
       <div class="cd-sub">Economics A · Paper 1: Markets &amp; Business Behaviour — 11 May 2026</div>
@@ -732,248 +796,292 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
     </div>
   </div>
 
-  <!-- GB NEWS LIVE WIDGET + TIMER -->
-  <div class="grid2" style="margin-bottom:40px;">
-    <div>
-      <div class="sec-title">📺 GB News — Watch Live</div>
-      <div class="gbn-live-widget">
-        <div class="gbn-live-header">
-          <div class="gbn-live-lbl"><div class="gbn-live-dot"></div>LIVE NOW · GB NEWS 24/7</div>
-          <button class="gbn-live-open" onclick="openGbnLiveFs()">⛶ Fullscreen</button>
-        </div>
-        <div class="gbn-live-embed">
-          <iframe
-            id="gbn-widget-iframe"
-            src="https://www.youtube.com/embed/QliL4CGc7iY?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
-            allow="autoplay; encrypted-media; picture-in-picture"
-            allowfullscreen
-            frameborder="0">
-          </iframe>
-        </div>
+  <!-- CHECKLISTS + PINNED NOTES — full width near top -->
+  <div class="grid2" style="margin-bottom:24px;">
+
+    <!-- DAILY + WEEKLY CHECKLIST -->
+    <div class="checklist-card">
+      <div class="checklist-tabs">
+        <button class="cl-tab on" id="clt-daily" onclick="switchCl('daily',this)">☀️ Today's Tasks</button>
+        <button class="cl-tab" id="clt-weekly" onclick="switchCl('weekly',this)">📅 This Week</button>
       </div>
-      <div style="padding:10px 14px;background:rgba(185,28,28,.07);border:1px solid rgba(185,28,28,.2);border-radius:10px;font-size:13px;color:#bbb;display:flex;align-items:center;gap:8px;">
-        <span style="color:#f87171;">🔴</span> At the top of every hour, GB News goes fullscreen automatically. <span style="color:#f87171;font-weight:600;cursor:pointer;" onclick="openGbnLiveFs()">Watch now →</span>
+      <div class="cl-body">
+        <div class="cl-input-row">
+          <input class="cl-input" id="cl-input" placeholder="Add a task..." maxlength="80" onkeydown="if(event.key==='Enter')addClItem()">
+          <button class="cl-add-btn" onclick="addClItem()">+ Add</button>
+        </div>
+        <div class="cl-list" id="cl-list"></div>
+        <div class="cl-footer">
+          <span class="cl-count" id="cl-count">0 tasks</span>
+          <span class="cl-clear" onclick="clearDoneCl()">Clear completed</span>
+        </div>
       </div>
     </div>
-    <div>
-      <div class="sec-title">⏱ Revision Timer</div>
-      <div class="timer-hero">
-        <div class="timer-display-big">
-          <div class="timer-time" id="tDisp">25:00</div>
-          <div class="timer-sublabel" id="tLbl">Ready to focus</div>
-          <div class="tpw"><div class="tpb" id="tBar"></div></div>
-        </div>
-        <div class="timer-controls">
-          <div style="font-size:13px;color:#888;margin-bottom:2px;">Duration</div>
-          <div class="timer-presets">
-            <div class="tpre act" onclick="setPreset(25,this)">25m</div>
-            <div class="tpre" onclick="setPreset(45,this)">45m</div>
-            <div class="tpre" onclick="setPreset(60,this)">60m</div>
-            <div class="tpre" onclick="setPreset(90,this)">90m</div>
+
+    <!-- PINNED IMPORTANT NOTES -->
+    <div class="pinned-notes-card">
+      <div class="pn-header">
+        <div class="pn-title">📌 Important Notes</div>
+        <div class="pn-tag">Always visible</div>
+      </div>
+      <textarea class="pn-area" id="pn-area" placeholder="Pin key reminders here — exam dates, formulas, things not to forget..." oninput="savePinnedNote()"></textarea>
+      <div class="pn-saved" id="pn-saved">Auto-saved</div>
+    </div>
+
+  </div>
+
+  <!-- MAIN TWO-COLUMN LAYOUT -->
+  <div class="main-layout">
+
+    <!-- LEFT: Revision work -->
+    <div class="main-col">
+
+      <!-- TIMER -->
+      <div class="sec">
+        <div class="sec-title">⏱ Revision Timer</div>
+        <div class="timer-hero">
+          <div class="timer-display-big">
+            <div class="timer-time" id="tDisp">25:00</div>
+            <div class="timer-sublabel" id="tLbl">Ready to focus</div>
+            <div class="tpw"><div class="tpb" id="tBar"></div></div>
           </div>
-          <div class="custom-timer-row">
-            <input class="custom-timer-input" id="customMins" type="number" min="1" max="480" placeholder="Custom mins" onkeydown="if(event.key==='Enter')setCustomTimer()">
-            <button class="custom-timer-btn" onclick="setCustomTimer()">Set</button>
+          <div class="timer-controls">
+            <div style="font-size:13px;color:#888;margin-bottom:2px;">Duration</div>
+            <div class="timer-presets">
+              <div class="tpre act" onclick="setPreset(25,this)">25m</div>
+              <div class="tpre" onclick="setPreset(45,this)">45m</div>
+              <div class="tpre" onclick="setPreset(60,this)">60m</div>
+              <div class="tpre" onclick="setPreset(90,this)">90m</div>
+            </div>
+            <div class="custom-timer-row">
+              <input class="custom-timer-input" id="customMins" type="number" min="1" max="480" placeholder="Custom mins" onkeydown="if(event.key==='Enter')setCustomTimer()">
+              <button class="custom-timer-btn" onclick="setCustomTimer()">Set</button>
+            </div>
+            <div class="tbtns">
+              <button class="tbtn tstart" id="tBtn" onclick="toggleTimer()">▶ Start</button>
+              <button class="tbtn treset" onclick="resetTimer()">↺ Reset</button>
+              <button class="tbtn tfocus" onclick="enterFocus()">⚡ Focus</button>
+            </div>
+            <div class="sess-info" id="sess-ct">0 sessions today</div>
+            <div class="qcard"><div class="qm">"</div><div class="qt" id="qTxt"></div></div>
           </div>
-          <div class="tbtns">
-            <button class="tbtn tstart" id="tBtn" onclick="toggleTimer()">▶ Start</button>
-            <button class="tbtn treset" onclick="resetTimer()">↺ Reset</button>
-            <button class="tbtn tfocus" onclick="enterFocus()">⚡ Focus</button>
+        </div>
+      </div>
+
+      <!-- TIP -->
+      <div class="sec">
+        <div class="sec-title">💡 Today's Revision Tip</div>
+        <div class="tip-card">
+          <div class="tip-tag">Daily Strategy · Changes Each Day</div>
+          <div class="tip-title" id="tip-title"></div>
+          <div class="tip-body" id="tip-body"></div>
+        </div>
+      </div>
+
+      <!-- SUBJECT TABS -->
+      <div class="sec">
+        <div class="tabs">
+          <button class="tab ae" onclick="switchTab('econ',this)">📈 Economics</button>
+          <button class="tab" onclick="switchTab('biz',this)">📊 Business</button>
+          <button class="tab" onclick="switchTab('geo',this)">🌍 Geography</button>
+        </div>
+
+        <!-- ECON -->
+        <div class="sp active" id="sp-econ">
+          <div class="focus-card fe"><div class="fbg">01</div><div class="ftag">Edexcel Economics A · 9EC0 · Remaining: Theme 4</div><div class="ftopic">Theme 4: Global Perspectives — Your Priority Now</div><div class="fdesc">Globalisation, trade, exchange rates, emerging economies. Paper 3 is synoptic across all four themes — T4 links everything together.</div><div class="ftips"><div class="ftip">Current account deficits, comparative advantage, protectionism — with diagrams</div><div class="ftip">Washington Consensus vs post-Washington debate for Paper 3 essays</div><div class="ftip">Real estate link: foreign investment in UK property markets is a direct T4 application</div></div></div>
+          <div class="notes-wrap">
+            <div class="notes-tabs">
+              <div class="ntab one on" onclick="switchNotes('econ',this)">📈 Econ</div>
+              <div class="ntab" onclick="switchNotes('biz',this)">📊 Business</div>
+              <div class="ntab" onclick="switchNotes('geo',this)">🌍 Geography</div>
+              <div class="ntab" onclick="switchNotes('gen',this)">📋 General</div>
+            </div>
+            <textarea class="notes-area" id="notes-econ" placeholder="Economics revision notes..." oninput="saveNote('econ')"></textarea>
+            <textarea class="notes-area" id="notes-biz" placeholder="Business revision notes..." oninput="saveNote('biz')" style="display:none;"></textarea>
+            <textarea class="notes-area" id="notes-geo" placeholder="Geography notes..." oninput="saveNote('geo')" style="display:none;"></textarea>
+            <textarea class="notes-area" id="notes-gen" placeholder="General notes..." oninput="saveNote('gen')" style="display:none;"></textarea>
+            <div class="notes-footer">
+              <div class="notes-saved" id="notes-saved">Auto-saved locally</div>
+              <div class="notes-chars" id="notes-chars">0 chars</div>
+            </div>
           </div>
-          <div class="sess-info" id="sess-ct">0 sessions today</div>
-          <div class="qcard"><div class="qm">"</div><div class="qt" id="qTxt"></div></div>
+          <div style="font-size:13px;color:#888;margin-bottom:9px;font-weight:500;">Topics — tick when confident</div>
+          <div class="tgrid" id="tg-econ"></div>
+          <div class="sec-title" style="font-size:16px;margin-bottom:10px;">Today's Past Paper Questions</div>
+          <div class="ppq-list" id="ppq-econ"></div>
+          <div class="sec-title" style="font-size:16px;margin-bottom:10px;">Resources</div>
+          <div class="rl">
+            <a href="https://www.savemyexams.com/a-level/economics/edexcel/17/" target="_blank" class="ri"><div class="rico rweb">🌐</div><div class="rinfo"><div class="rn">Save My Exams — Edexcel Economics A</div><div class="rm">Notes · Past papers · Mark schemes · 9EC0</div></div><span class="rarr">↗</span></a>
+            <a href="https://www.youtube.com/@EconplusDal" target="_blank" class="ri"><div class="rico ryt">▶</div><div class="rinfo"><div class="rn">EconplusDal — YouTube</div><div class="rm">The definitive Edexcel A-level Economics channel</div></div><span class="rarr">↗</span></a>
+            <a href="https://www.tutor2u.net/economics/reference/a-level-economics-edexcel" target="_blank" class="ri"><div class="rico rdoc">📄</div><div class="rinfo"><div class="rn">Tutor2U — Economics</div><div class="rm">Diagrams · Essays · Evaluation chains</div></div><span class="rarr">↗</span></a>
+            <a href="https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/economics-a-2015.coursematerials.html" target="_blank" class="ri"><div class="rico rpdf">📋</div><div class="rinfo"><div class="rn">Pearson Official Past Papers · 9EC0</div><div class="rm">All past papers &amp; official mark schemes</div></div><span class="rarr">↗</span></a>
+          </div>
+        </div>
+
+        <!-- BUSINESS -->
+        <div class="sp" id="sp-biz">
+          <div class="focus-card fb"><div class="fbg">02</div><div class="ftag">Edexcel Business · 9BS0 · Remaining: Theme 4</div><div class="ftopic">Theme 4: Global Business — Your Priority Now</div><div class="fdesc">MNCs, emerging markets, globalisation impacts on strategy. Paper 3 is entirely synoptic — Theme 4 drives strong P3 essay answers.</div><div class="ftips"><div class="ftip">Dunning's Eclectic Paradigm (OLI) — why firms go multinational</div><div class="ftip">Case studies: Apple supply chain, Unilever emerging markets, Tata Group</div><div class="ftip">Real estate link: overseas property investment, REITs, global developer strategies</div></div></div>
+          <div class="biscuit-box">
+            <div class="biscuit-tag">📋 Paper 3 Case Study — Biscuits &amp; Confectionery Industry</div>
+            <div class="biscuit-title">Key Companies, Market Context &amp; Essay Angles</div>
+            <div class="biscuit-txt"><strong>Market leaders:</strong> McVitie's (pladis), Mondelez (Cadbury, Oreo), Nestlé (KitKat), Mars, Ferrero. UK biscuit market ~£3bn. Confectionery ~£4.5bn.<br><br><strong>Key themes:</strong> Ansoff Matrix, Porter's Five Forces, ROCE, Fairtrade supply chains.<br><br><strong>Current issues:</strong> Cocoa price surge 2024-25, sugar tax, ESG pressure, premiumisation vs cost-of-living squeeze.<br><br><strong>Model essay angle:</strong> "To what extent is innovation the most important factor in maintaining competitive advantage in the confectionery industry?"</div>
+          </div>
+          <div style="font-size:13px;color:#888;margin-bottom:9px;font-weight:500;">Topics — tick when confident</div>
+          <div class="tgrid" id="tg-biz"></div>
+          <div class="sec-title" style="font-size:16px;margin-bottom:10px;">Today's Past Paper Questions</div>
+          <div class="ppq-list" id="ppq-biz"></div>
+          <div class="sec-title" style="font-size:16px;margin-bottom:10px;">Resources</div>
+          <div class="rl">
+            <a href="https://www.savemyexams.com/a-level/business/edexcel/" target="_blank" class="ri"><div class="rico rweb">🌐</div><div class="rinfo"><div class="rn">Save My Exams — Edexcel Business</div><div class="rm">Notes · Model answers · Past papers · 9BS0</div></div><span class="rarr">↗</span></a>
+            <a href="https://www.tutor2u.net/business/reference/edexcel-a-level-business" target="_blank" class="ri"><div class="rico rdoc">📄</div><div class="rinfo"><div class="rn">Tutor2U — Business</div><div class="rm">Case studies · Key terms · Evaluation points</div></div><span class="rarr">↗</span></a>
+            <a href="https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/business-2015.coursematerials.html" target="_blank" class="ri"><div class="rico rpdf">📋</div><div class="rinfo"><div class="rn">Pearson Official Past Papers · 9BS0</div><div class="rm">All past papers &amp; official mark schemes</div></div><span class="rarr">↗</span></a>
+          </div>
+        </div>
+
+        <!-- GEOGRAPHY -->
+        <div class="sp" id="sp-geo">
+          <div class="focus-card fg"><div class="fbg">03</div><div class="ftag">OCR Geography A · H481 · Paper 3 Synoptic</div><div class="ftopic">Hazardous Earth — Paper 3 Debate Topic</div><div class="fdesc">Link tectonic hazards to human vulnerability, disaster risk reduction, and place-making. Synoptic connections to Disease Dilemmas and Global Migration are standard exam demands.</div><div class="ftips"><div class="ftip">Case studies: Tohoku 2011 (AC) · Nepal Gorkha 2015 (LIDC) · Montserrat volcano</div><div class="ftip">Park Model — link recovery to place identity (synoptic to Changing Spaces)</div><div class="ftip">20-mark essays: evaluate physical vs human factors — conclude with a justified judgement</div></div></div>
+          <div style="font-size:13px;color:#888;margin-bottom:9px;font-weight:500;">Topics — tick when confident</div>
+          <div class="tgrid" id="tg-geo"></div>
+          <div class="sec-title" style="font-size:16px;margin-bottom:10px;">Today's Past Paper Questions</div>
+          <div class="ppq-list" id="ppq-geo"></div>
+          <div class="sec-title" style="font-size:16px;margin-bottom:10px;">Resources</div>
+          <div class="rl">
+            <a href="https://www.savemyexams.com/a-level/geography/ocr/a/" target="_blank" class="ri"><div class="rico rweb">🌐</div><div class="rinfo"><div class="rn">Save My Exams — OCR Geography A</div><div class="rm">H481 notes · Past papers · Model answers</div></div><span class="rarr">↗</span></a>
+            <a href="https://ibaguette.com/cheatsheets/alevel/geography/all" target="_blank" class="ri"><div class="rico rdoc">📚</div><div class="rinfo"><div class="rn">iBaguette — Free OCR Geo Cheat Sheets</div><div class="rm">Detailed notes for every H481 topic</div></div><span class="rarr">↗</span></a>
+            <a href="https://www.ocr.org.uk/qualifications/as-and-a-level/geography-h081-h481-from-2016/assessment/" target="_blank" class="ri"><div class="rico rpdf">📋</div><div class="rinfo"><div class="rn">OCR Official Past Papers · H481</div><div class="rm">All past papers &amp; mark schemes</div></div><span class="rarr">↗</span></a>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- TIP -->
-  <div class="sec">
-    <div class="sec-title">💡 Today's Revision Tip</div>
-    <div class="tip-card">
-      <div class="tip-tag">Daily Strategy · Changes Each Day</div>
-      <div class="tip-title" id="tip-title"></div>
-      <div class="tip-body" id="tip-body"></div>
-    </div>
-  </div>
-
-  <!-- SUBJECT TABS -->
-  <div class="sec">
-    <div class="tabs">
-      <button class="tab ae" onclick="switchTab('econ',this)">📈 Economics</button>
-      <button class="tab" onclick="switchTab('biz',this)">📊 Business</button>
-      <button class="tab" onclick="switchTab('geo',this)">🌍 Geography</button>
-    </div>
-
-    <!-- ECON -->
-    <div class="sp active" id="sp-econ">
-      <div class="focus-card fe"><div class="fbg">01</div><div class="ftag">Edexcel Economics A · 9EC0 · Remaining: Theme 4</div><div class="ftopic">Theme 4: Global Perspectives — Your Priority Now</div><div class="fdesc">Globalisation, trade, exchange rates, emerging economies. Paper 3 is synoptic across all four themes — T4 links everything together.</div><div class="ftips"><div class="ftip">Current account deficits, comparative advantage, protectionism — with diagrams</div><div class="ftip">Washington Consensus vs post-Washington debate for Paper 3 essays</div><div class="ftip">Real estate link: foreign investment in UK property markets is a direct T4 application</div></div></div>
-      <div class="notes-wrap">
-        <div class="notes-tabs">
-          <div class="ntab one on" onclick="switchNotes('econ',this)">📈 Econ</div>
-          <div class="ntab" onclick="switchNotes('biz',this)">📊 Business</div>
-          <div class="ntab" onclick="switchNotes('geo',this)">🌍 Geography</div>
-          <div class="ntab" onclick="switchNotes('gen',this)">📋 General</div>
+      <!-- LOG + HEATMAP -->
+      <div class="sec">
+        <div class="sec-title">📝 Today's Revision Log</div>
+        <div class="log-wrap">
+          <div class="log-list" id="logList"></div>
+          <div class="ladd">
+            <select class="lsel" id="logSubj"><option value="econ">📈 Economics</option><option value="biz">📊 Business</option><option value="geo">🌍 Geography</option></select>
+            <input class="lmin" type="number" id="logMin" placeholder="mins" min="1" max="480" value="30">
+            <button class="lbtn" onclick="addLog()">+ Log</button>
+          </div>
+          <div class="tot-row"><span class="tot-lbl">Today's total</span><span class="tot-val" id="totVal">0 min</span></div>
+          <div class="tot-bw"><div class="tot-b" id="totBar" style="width:0%"></div></div>
+          <div style="font-size:11px;color:#555;margin-top:3px;text-align:right;">Target: 5 hours / day</div>
         </div>
-        <textarea class="notes-area" id="notes-econ" placeholder="Type your Economics revision notes here... Key diagrams, evaluation chains, case studies, formulas..." oninput="saveNote('econ')"></textarea>
-        <textarea class="notes-area" id="notes-biz" placeholder="Business revision notes... Financial ratios, case studies, Paper 3 angles..." oninput="saveNote('biz')" style="display:none;"></textarea>
-        <textarea class="notes-area" id="notes-geo" placeholder="Geography notes... Case studies, synoptic links, 20-mark essay frameworks..." oninput="saveNote('geo')" style="display:none;"></textarea>
-        <textarea class="notes-area" id="notes-gen" placeholder="General notes... To-do lists, exam day reminders, anything..." oninput="saveNote('gen')" style="display:none;"></textarea>
-        <div class="notes-footer">
-          <div class="notes-saved" id="notes-saved">Notes auto-saved locally</div>
-          <div class="notes-chars" id="notes-chars">0 chars</div>
+        <div class="hmap-wrap">
+          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#f0ede8;margin-bottom:11px;">📅 4-Week Activity</div>
+          <div class="hlrow"><div class="hl">Mon</div><div class="hl">Tue</div><div class="hl">Wed</div><div class="hl">Thu</div><div class="hl">Fri</div><div class="hl">Sat</div><div class="hl">Sun</div></div>
+          <div class="hmap" id="hmap"></div>
+          <div class="hleg"><span class="hlgl">None</span><div class="hlgc h0"></div><div class="hlgc h1"></div><div class="hlgc h2"></div><div class="hlgc h3"></div><span class="hlgl">Intense</span></div>
         </div>
       </div>
-      <div style="font-size:14px;color:#888;margin-bottom:9px;font-weight:500;">Topics — tick when confident</div>
-      <div class="tgrid" id="tg-econ"></div>
-      <div class="sec-title" style="font-size:17px;margin-bottom:10px;">Today's Past Paper Questions</div>
-      <div class="ppq-list" id="ppq-econ"></div>
-      <div class="sec-title" style="font-size:17px;margin-bottom:10px;">Resources</div>
-      <div class="rl">
-        <a href="https://www.savemyexams.com/a-level/economics/edexcel/17/" target="_blank" class="ri"><div class="rico rweb">🌐</div><div class="rinfo"><div class="rn">Save My Exams — Edexcel Economics A</div><div class="rm">Notes · Past papers · Mark schemes · 9EC0</div></div><span class="rarr">↗</span></a>
-        <a href="https://www.youtube.com/@EconplusDal" target="_blank" class="ri"><div class="rico ryt">▶</div><div class="rinfo"><div class="rn">EconplusDal — YouTube</div><div class="rm">The definitive Edexcel A-level Economics channel</div></div><span class="rarr">↗</span></a>
-        <a href="https://www.tutor2u.net/economics/reference/a-level-economics-edexcel" target="_blank" class="ri"><div class="rico rdoc">📄</div><div class="rinfo"><div class="rn">Tutor2U — Economics</div><div class="rm">Diagrams · Essays · Evaluation chains</div></div><span class="rarr">↗</span></a>
-        <a href="https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/economics-a-2015.coursematerials.html" target="_blank" class="ri"><div class="rico rpdf">📋</div><div class="rinfo"><div class="rn">Pearson Official Past Papers · 9EC0</div><div class="rm">All past papers &amp; official mark schemes</div></div><span class="rarr">↗</span></a>
-      </div>
-    </div>
 
-    <!-- BUSINESS -->
-    <div class="sp" id="sp-biz">
-      <div class="focus-card fb"><div class="fbg">02</div><div class="ftag">Edexcel Business · 9BS0 · Remaining: Theme 4</div><div class="ftopic">Theme 4: Global Business — Your Priority Now</div><div class="fdesc">MNCs, emerging markets, globalisation impacts on strategy. Paper 3 is entirely synoptic — Theme 4 drives strong P3 essay answers.</div><div class="ftips"><div class="ftip">Dunning's Eclectic Paradigm (OLI) — why firms go multinational</div><div class="ftip">Case studies: Apple supply chain, Unilever emerging markets, Tata Group</div><div class="ftip">Real estate link: overseas property investment, REITs, global developer strategies</div></div></div>
-      <div class="biscuit-box">
-        <div class="biscuit-tag">📋 Paper 3 Case Study — Biscuits &amp; Confectionery Industry</div>
-        <div class="biscuit-title">Key Companies, Market Context &amp; Essay Angles</div>
-        <div class="biscuit-txt"><strong>Market leaders:</strong> McVitie's (pladis), Mondelez (Cadbury, Oreo), Nestlé (KitKat), Mars, Ferrero. UK biscuit market ~£3bn. Confectionery ~£4.5bn.<br><br><strong>Key themes:</strong> Ansoff Matrix (product development — reduced sugar lines), Porter's Five Forces (supermarket own-label threat), ROCE for capital-intensive manufacturing, MNCs sourcing cocoa ethically via Fairtrade supply chains.<br><br><strong>Current issues:</strong> Cocoa price surge 2024-25 (commodity risk), sugar tax implications, sustainability/palm oil ESG pressure, premiumisation vs cost-of-living squeeze.<br><br><strong>Model essay angle:</strong> "To what extent is innovation the most important factor in maintaining competitive advantage in the confectionery industry?" — evaluate with financial strength, brand equity, pricing strategy, global distribution.</div>
-      </div>
-      <div style="font-size:14px;color:#888;margin-bottom:9px;font-weight:500;">Topics — tick when confident</div>
-      <div class="tgrid" id="tg-biz"></div>
-      <div class="sec-title" style="font-size:17px;margin-bottom:10px;">Today's Past Paper Questions</div>
-      <div class="ppq-list" id="ppq-biz"></div>
-      <div class="sec-title" style="font-size:17px;margin-bottom:10px;">Resources</div>
-      <div class="rl">
-        <a href="https://www.savemyexams.com/a-level/business/edexcel/" target="_blank" class="ri"><div class="rico rweb">🌐</div><div class="rinfo"><div class="rn">Save My Exams — Edexcel Business</div><div class="rm">Notes · Model answers · Past papers · 9BS0</div></div><span class="rarr">↗</span></a>
-        <a href="https://www.youtube.com/@BusinessandEconomics" target="_blank" class="ri"><div class="rico ryt">▶</div><div class="rinfo"><div class="rn">Business &amp; Economics — YouTube</div><div class="rm">Edexcel 9BS0 specific video lessons</div></div><span class="rarr">↗</span></a>
-        <a href="https://www.tutor2u.net/business/reference/edexcel-a-level-business" target="_blank" class="ri"><div class="rico rdoc">📄</div><div class="rinfo"><div class="rn">Tutor2U — Business</div><div class="rm">Case studies · Key terms · Evaluation points</div></div><span class="rarr">↗</span></a>
-        <a href="https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/business-2015.coursematerials.html" target="_blank" class="ri"><div class="rico rpdf">📋</div><div class="rinfo"><div class="rn">Pearson Official Past Papers · 9BS0</div><div class="rm">All past papers &amp; official mark schemes</div></div><span class="rarr">↗</span></a>
-      </div>
-    </div>
-
-    <!-- GEOGRAPHY -->
-    <div class="sp" id="sp-geo">
-      <div class="focus-card fg"><div class="fbg">03</div><div class="ftag">OCR Geography A · H481 · Paper 3 Synoptic</div><div class="ftopic">Hazardous Earth — Paper 3 Debate Topic</div><div class="fdesc">Link tectonic hazards to human vulnerability, disaster risk reduction, and place-making. Synoptic connections to Disease Dilemmas and Global Migration are standard exam demands.</div><div class="ftips"><div class="ftip">Case studies: Tohoku 2011 (AC) · Nepal Gorkha 2015 (LIDC) · Montserrat volcano</div><div class="ftip">Park Model — link recovery to place identity (synoptic to Changing Spaces)</div><div class="ftip">20-mark essays: evaluate physical vs human factors — conclude with a justified judgement</div></div></div>
-      <div style="font-size:14px;color:#888;margin-bottom:9px;font-weight:500;">Topics — tick when confident</div>
-      <div class="tgrid" id="tg-geo"></div>
-      <div class="sec-title" style="font-size:17px;margin-bottom:10px;">Today's Past Paper Questions</div>
-      <div class="ppq-list" id="ppq-geo"></div>
-      <div class="sec-title" style="font-size:17px;margin-bottom:10px;">Resources</div>
-      <div class="rl">
-        <a href="https://www.savemyexams.com/a-level/geography/ocr/a/" target="_blank" class="ri"><div class="rico rweb">🌐</div><div class="rinfo"><div class="rn">Save My Exams — OCR Geography A</div><div class="rm">H481 notes · Past papers · Model answers</div></div><span class="rarr">↗</span></a>
-        <a href="https://ibaguette.com/cheatsheets/alevel/geography/all" target="_blank" class="ri"><div class="rico rdoc">📚</div><div class="rinfo"><div class="rn">iBaguette — Free OCR Geo Cheat Sheets</div><div class="rm">Detailed notes for every H481 topic</div></div><span class="rarr">↗</span></a>
-        <a href="https://www.youtube.com/@geographyalltheway" target="_blank" class="ri"><div class="rico ryt">▶</div><div class="rinfo"><div class="rn">Geography All The Way — YouTube</div><div class="rm">A-level geography explanations · OCR aligned</div></div><span class="rarr">↗</span></a>
-        <a href="https://www.ocr.org.uk/qualifications/as-and-a-level/geography-h081-h481-from-2016/assessment/" target="_blank" class="ri"><div class="rico rpdf">📋</div><div class="rinfo"><div class="rn">OCR Official Past Papers · H481</div><div class="rm">All past papers &amp; mark schemes</div></div><span class="rarr">↗</span></a>
-      </div>
-    </div>
-  </div>
-
-  <!-- WHY THIS MATTERS -->
-  <div class="sec">
-    <div class="sec-title">🏢 Why This Matters — Your Real Estate Future</div>
-    <div class="re3">
-      <div class="recard"><div class="reico">📈</div><div class="resub se">Economics A</div><div class="retitle">Property Markets &amp; Valuation</div><div class="retxt">Interest rates, market failure in planning, elasticity of housing supply — the daily frameworks of RICS-qualified surveyors at Savills, JLL and CBRE.</div></div>
-      <div class="recard"><div class="reico">📊</div><div class="resub sb">Business</div><div class="retitle">Development Finance &amp; Strategy</div><div class="retxt">Financial ratios, investment appraisal and NPV are standard in real estate finance. Theme 4 covers MNCs — directly relevant to cross-border property investment.</div></div>
-      <div class="recard"><div class="reico">🌍</div><div class="resub sg">Geography</div><div class="retitle">Place, Planning &amp; Site Risk</div><div class="retxt">Changing Spaces is the academic framework for urban regeneration. Hazardous Earth informs site risk. Global Migration drives housing demand modelling.</div></div>
-    </div>
-    <div style="padding:16px 18px;background:rgba(0,87,168,.09);border:1px solid rgba(0,87,168,.28);border-radius:14px;">
-      <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--bl);margin-bottom:6px;font-weight:600;">Sheffield Hallam Real Estate BSc — Your Target</div>
-      <div style="font-size:clamp(12px,2vw,15px);line-height:1.75;color:#ccc;">Ranked <strong style="color:#f0ede8;">2nd in the UK</strong> for Land &amp; Property and <strong style="color:#f0ede8;">1st for graduate outcomes</strong> (CUG 2026). RICS accredited. Entry: <strong style="color:#f0ede8;">104–112 UCAS points.</strong> You are studying exactly the right subjects.</div>
-    </div>
-  </div>
-
-  <!-- AERIAL PHOTOS -->
-  <div class="sec">
-    <div class="sec-title">🏔 Your Aerial Perspectives — Take a Moment</div>
-    <div class="photo-wrap">
-      <div class="photo-track" id="photoTrack">
-        <div class="photo-slide"><img src="https://cdn.prod.website-files.com/67f845f932f268860becd300/67f845f932f268860becd389_Franks%20(5).jpg" alt="Castle Hill"><div class="slide-ov"></div><div class="slide-cap"><div class="slide-loc">Huddersfield · West Yorkshire</div><div class="slide-title">Castle Hill</div><div class="slide-quote">Breathe. Look at what you built from up here. You already see the world differently from everyone else in that exam hall.</div></div><button class="slide-fs" onclick="openFsm(0,event)">⛶</button></div>
-        <div class="photo-slide"><img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/DJI-0151-(2).jpg" alt="Fintra Beach"><div class="slide-ov"></div><div class="slide-cap"><div class="slide-loc">Killybegs · County Donegal</div><div class="slide-title">Fintra Beach</div><div class="slide-quote">The coastal processes you're revising shaped this beach. You have literally flown over your Geography revision material.</div></div><button class="slide-fs" onclick="openFsm(1,event)">⛶</button></div>
-        <div class="photo-slide"><img src="https://i.postimg.cc/hPY664NS/DJI-0196-FF.jpg" alt="Ardara"><div class="slide-ov"></div><div class="slide-cap"><div class="slide-loc">Ardara · County Donegal</div><div class="slide-title">County Donegal</div><div class="slide-quote">Every exam session is a flight plan. You know the route. You have done the pre-flight checks. Execute it.</div></div><button class="slide-fs" onclick="openFsm(2,event)">⛶</button></div>
-      </div>
-      <button class="slide-nav-btn slide-prev" onclick="photoNav(-1)">‹</button>
-      <button class="slide-nav-btn slide-next" onclick="photoNav(1)">›</button>
-      <div class="slide-dots" id="photoDots"></div>
-    </div>
-  </div>
-
-  <!-- GBN HEADLINES -->
-  <div class="sec">
-    <div class="gbn-header-row">
-      <div class="sec-title" style="margin-bottom:0;">📰 GB News — Latest Headlines</div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <span style="font-size:11px;color:#555;" id="gbn-last-update"></span>
-        <button class="bn-test-btn" onclick="triggerBreakingRandom()">🔴 Breaking Alert</button>
-      </div>
-    </div>
-    <div style="margin-bottom:14px;"></div>
-    <div class="gbn-wrap"><div class="gbn-track" id="gbnTrack"><div class="gbn-loading" id="gbn-loading">Loading latest GB News headlines...</div></div></div>
-    <div class="gbn-nav-row">
-      <button class="gbn-btn" onclick="gbnNav(-1)">‹ Prev</button>
-      <div class="gbn-dots" id="gbnDots"></div>
-      <button class="gbn-btn" onclick="gbnNav(1)">Next ›</button>
-    </div>
-  </div>
-
-  <!-- LOG + HEATMAP | RINGS + EXAMS -->
-  <div class="grid2">
-    <div>
-      <div class="sec-title">📝 Today's Revision Log</div>
-      <div class="log-wrap">
-        <div class="log-list" id="logList"></div>
-        <div class="ladd">
-          <select class="lsel" id="logSubj"><option value="econ">📈 Economics</option><option value="biz">📊 Business</option><option value="geo">🌍 Geography</option></select>
-          <input class="lmin" type="number" id="logMin" placeholder="mins" min="1" max="480" value="30">
-          <button class="lbtn" onclick="addLog()">+ Log</button>
+      <!-- WHY THIS MATTERS -->
+      <div class="sec">
+        <div class="sec-title">🏢 Why This Matters — Your Real Estate Future</div>
+        <div class="re3">
+          <div class="recard"><div class="reico">📈</div><div class="resub se">Economics A</div><div class="retitle">Property Markets &amp; Valuation</div><div class="retxt">Interest rates, market failure in planning, elasticity of housing supply — the daily frameworks of RICS-qualified surveyors at Savills, JLL and CBRE.</div></div>
+          <div class="recard"><div class="reico">📊</div><div class="resub sb">Business</div><div class="retitle">Development Finance &amp; Strategy</div><div class="retxt">Financial ratios, investment appraisal and NPV are standard in real estate finance. Theme 4 covers MNCs — directly relevant to cross-border property investment.</div></div>
+          <div class="recard"><div class="reico">🌍</div><div class="resub sg">Geography</div><div class="retitle">Place, Planning &amp; Site Risk</div><div class="retxt">Changing Spaces is the academic framework for urban regeneration. Hazardous Earth informs site risk. Global Migration drives housing demand modelling.</div></div>
         </div>
-        <div class="tot-row"><span class="tot-lbl">Today's total</span><span class="tot-val" id="totVal">0 min</span></div>
-        <div class="tot-bw"><div class="tot-b" id="totBar" style="width:0%"></div></div>
-        <div style="font-size:11px;color:#777;margin-top:3px;text-align:right;">Target: 5 hours / day</div>
+        <div style="padding:14px 16px;background:rgba(0,87,168,.09);border:1px solid rgba(0,87,168,.28);border-radius:12px;">
+          <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--bl);margin-bottom:5px;font-weight:600;">Sheffield Hallam Real Estate BSc — Your Target</div>
+          <div style="font-size:clamp(12px,1.8vw,14px);line-height:1.75;color:#ccc;">Ranked <strong style="color:#f0ede8;">2nd in the UK</strong> for Land &amp; Property and <strong style="color:#f0ede8;">1st for graduate outcomes</strong> (CUG 2026). RICS accredited. Entry: <strong style="color:#f0ede8;">104–112 UCAS points.</strong></div>
+        </div>
       </div>
-      <div class="hmap-wrap">
-        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#f0ede8;margin-bottom:12px;">📅 4-Week Activity</div>
-        <div class="hlrow"><div class="hl">Mon</div><div class="hl">Tue</div><div class="hl">Wed</div><div class="hl">Thu</div><div class="hl">Fri</div><div class="hl">Sat</div><div class="hl">Sun</div></div>
-        <div class="hmap" id="hmap"></div>
-        <div class="hleg"><span class="hlgl">None</span><div class="hlgc h0"></div><div class="hlgc h1"></div><div class="hlgc h2"></div><div class="hlgc h3"></div><span class="hlgl">Intense</span></div>
-      </div>
-    </div>
-    <div>
-      <div class="sec-title">📊 Topic Coverage</div>
-      <div class="rings-row">
-        <div class="rw"><svg width="76" height="76" class="rsvg"><circle class="rbg" cx="38" cy="38" r="32"/><circle class="rc" cx="38" cy="38" r="32" stroke="#3b82f6" stroke-dasharray="201.1" stroke-dashoffset="201.1" id="re"/></svg><div class="rp" id="re-p">0%</div><div class="rl2">Economics</div></div>
-        <div class="rw"><svg width="76" height="76" class="rsvg"><circle class="rbg" cx="38" cy="38" r="32"/><circle class="rc" cx="38" cy="38" r="32" stroke="#f59e0b" stroke-dasharray="201.1" stroke-dashoffset="201.1" id="rb"/></svg><div class="rp" id="rb-p">0%</div><div class="rl2">Business</div></div>
-        <div class="rw"><svg width="76" height="76" class="rsvg"><circle class="rbg" cx="38" cy="38" r="32"/><circle class="rc" cx="38" cy="38" r="32" stroke="#10b981" stroke-dasharray="201.1" stroke-dashoffset="201.1" id="rg"/></svg><div class="rp" id="rg-p">0%</div><div class="rl2">Geography</div></div>
-      </div>
-      <div class="sec-title">📆 Exam Schedule 2026</div>
-      <div class="exam-list">
-        <div class="ex next"><div class="exdc"><div class="exmo">May</div><div class="exd">11</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Economics A · P1</div><div class="exp">Markets &amp; Business · 2h AM</div></div><div class="exb ee">Econ</div></div>
-        <div class="ex next"><div class="exdc"><div class="exmo">May</div><div class="exd">11</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Business · P1</div><div class="exp">Marketing &amp; People · 2h AM</div></div><div class="exb eb2">Biz</div></div>
-        <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">12</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Geography · P1</div><div class="exp">Physical Systems · 2h 15m AM</div></div><div class="exb eg">Geo</div></div>
-        <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">18</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Economics A · P2</div><div class="exp">UK Economy · 1h 30m AM</div></div><div class="exb ee">Econ</div></div>
-        <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">18</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Business · P2</div><div class="exp">Business Activities · 2h PM</div></div><div class="exb eb2">Biz</div></div>
-        <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">21</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Geography · P2</div><div class="exp">Human Interactions · PM</div></div><div class="exb eg">Geo</div></div>
-        <div class="ex"><div class="exdc"><div class="exmo">Jun</div><div class="exd">8</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Geography · P3</div><div class="exp">Geographical Debates · PM</div></div><div class="exb eg">Geo</div></div>
-      </div>
-    </div>
-  </div>
 
-  <!-- RADIO -->
-  <div class="sec" style="margin-top:40px;">
-    <div class="sec-title">📻 Midwest Radio — Live Stream</div>
-    <div class="radio-card">
-      <div class="radio-icon">📻</div>
-      <div class="radio-info"><div class="radio-title">Midwest Radio · 96.1 FM</div><div class="radio-sub">Ireland's most-listened local station · County Mayo · Country, music &amp; Irish chat · 24/7</div></div>
-      <button class="radio-btn" id="radioBtn" onclick="toggleRadio()">▶ Listen Live</button>
-    </div>
-    <audio id="radioAudio"></audio>
-  </div>
+      <!-- AERIAL PHOTOS -->
+      <div class="sec">
+        <div class="sec-title">🏔 Your Aerial Perspectives</div>
+        <div class="photo-wrap">
+          <div class="photo-track" id="photoTrack">
+            <div class="photo-slide"><img src="https://cdn.prod.website-files.com/67f845f932f268860becd300/67f845f932f268860becd389_Franks%20(5).jpg" alt="Castle Hill"><div class="slide-ov"></div><div class="slide-cap"><div class="slide-loc">Huddersfield · West Yorkshire</div><div class="slide-title">Castle Hill</div><div class="slide-quote">Breathe. You already see the world differently from everyone else in that exam hall.</div></div><button class="slide-fs" onclick="openFsm(0,event)">⛶</button></div>
+            <div class="photo-slide"><img src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/DJI-0151-(2).jpg" alt="Fintra Beach"><div class="slide-ov"></div><div class="slide-cap"><div class="slide-loc">Killybegs · County Donegal</div><div class="slide-title">Fintra Beach</div><div class="slide-quote">The coastal processes you're revising shaped this beach. You have literally flown over your Geography revision material.</div></div><button class="slide-fs" onclick="openFsm(1,event)">⛶</button></div>
+            <div class="photo-slide"><img src="https://i.postimg.cc/hPY664NS/DJI-0196-FF.jpg" alt="Ardara"><div class="slide-ov"></div><div class="slide-cap"><div class="slide-loc">Ardara · County Donegal</div><div class="slide-title">County Donegal</div><div class="slide-quote">Every exam session is a flight plan. You know the route. Execute it.</div></div><button class="slide-fs" onclick="openFsm(2,event)">⛶</button></div>
+          </div>
+          <button class="slide-nav-btn slide-prev" onclick="photoNav(-1)">‹</button>
+          <button class="slide-nav-btn slide-next" onclick="photoNav(1)">›</button>
+          <div class="slide-dots" id="photoDots"></div>
+        </div>
+      </div>
+
+      <!-- RADIO -->
+      <div class="sec">
+        <div class="sec-title">📻 Midwest Radio — Live Stream</div>
+        <div class="radio-card">
+          <div class="radio-icon">📻</div>
+          <div class="radio-info"><div class="radio-title">Midwest Radio · 96.1 FM</div><div class="radio-sub">Ireland's most-listened local station · County Mayo · 24/7</div></div>
+          <button class="radio-btn" id="radioBtn" onclick="toggleRadio()">▶ Listen Live</button>
+        </div>
+        <audio id="radioAudio"></audio>
+      </div>
+
+    </div><!-- /main-col -->
+
+    <!-- RIGHT SIDEBAR: News -->
+    <div class="side-col">
+
+      <!-- GB NEWS LIVE -->
+      <div>
+        <div class="sec-title">📺 GB News Live</div>
+        <div class="gbn-live-widget">
+          <div class="gbn-live-header">
+            <div class="gbn-live-lbl"><div class="gbn-live-dot"></div>LIVE · 24/7</div>
+            <button class="gbn-live-open" onclick="openGbnLiveFs()">⛶ Full</button>
+          </div>
+          <div class="gbn-live-embed">
+            <iframe id="gbn-widget-iframe" src="https://www.youtube.com/embed/QliL4CGc7iY?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>
+          </div>
+        </div>
+        <div style="padding:8px 12px;background:rgba(185,28,28,.07);border:1px solid rgba(185,28,28,.18);border-radius:9px;font-size:12px;color:#888;display:flex;align-items:center;gap:7px;margin-bottom:16px;">
+          <span style="color:#f87171;">🔴</span> Fullscreen at the top of every hour. <span style="color:#f87171;cursor:pointer;font-weight:600;" onclick="openGbnLiveFs()">Watch now →</span>
+        </div>
+      </div>
+
+      <!-- GBN HEADLINES -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+          <div class="sec-title" style="margin-bottom:0;">📰 Headlines</div>
+          <div style="display:flex;gap:7px;align-items:center;">
+            <span style="font-size:10px;color:#444;" id="gbn-last-update"></span>
+            <button class="bn-test-btn" onclick="triggerBreakingRandom()">🔴 Break</button>
+          </div>
+        </div>
+        <div class="gbn-wrap"><div class="gbn-track" id="gbnTrack"><div class="gbn-loading">Loading headlines...</div></div></div>
+        <div class="gbn-nav-row">
+          <button class="gbn-btn" onclick="gbnNav(-1)">‹</button>
+          <div class="gbn-dots" id="gbnDots"></div>
+          <button class="gbn-btn" onclick="gbnNav(1)">›</button>
+        </div>
+      </div>
+
+      <!-- EXAM SCHEDULE -->
+      <div>
+        <div class="sec-title">📆 Exam Schedule 2026</div>
+        <div class="exam-list">
+          <div class="ex next"><div class="exdc"><div class="exmo">May</div><div class="exd">11</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Economics A · P1</div><div class="exp">Markets &amp; Business · 2h AM</div></div><div class="exb ee">Econ</div></div>
+          <div class="ex next"><div class="exdc"><div class="exmo">May</div><div class="exd">11</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Business · P1</div><div class="exp">Marketing &amp; People · 2h AM</div></div><div class="exb eb2">Biz</div></div>
+          <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">12</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Geography · P1</div><div class="exp">Physical Systems · 2h 15m AM</div></div><div class="exb eg">Geo</div></div>
+          <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">18</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Economics A · P2</div><div class="exp">UK Economy · 1h 30m AM</div></div><div class="exb ee">Econ</div></div>
+          <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">18</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Business · P2</div><div class="exp">Business Activities · 2h PM</div></div><div class="exb eb2">Biz</div></div>
+          <div class="ex"><div class="exdc"><div class="exmo">May</div><div class="exd">21</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Geography · P2</div><div class="exp">Human Interactions · PM</div></div><div class="exb eg">Geo</div></div>
+          <div class="ex"><div class="exdc"><div class="exmo">Jun</div><div class="exd">8</div></div><div class="exdiv"></div><div class="exi"><div class="exn">Geography · P3</div><div class="exp">Geographical Debates · PM</div></div><div class="exb eg">Geo</div></div>
+        </div>
+      </div>
+
+      <!-- TOPIC COVERAGE RINGS -->
+      <div>
+        <div class="sec-title">📊 Coverage</div>
+        <div class="rings-row">
+          <div class="rw"><svg width="76" height="76" class="rsvg"><circle class="rbg" cx="38" cy="38" r="32"/><circle class="rc" cx="38" cy="38" r="32" stroke="#3b82f6" stroke-dasharray="201.1" stroke-dashoffset="201.1" id="re"/></svg><div class="rp" id="re-p">0%</div><div class="rl2">Econ</div></div>
+          <div class="rw"><svg width="76" height="76" class="rsvg"><circle class="rbg" cx="38" cy="38" r="32"/><circle class="rc" cx="38" cy="38" r="32" stroke="#f59e0b" stroke-dasharray="201.1" stroke-dashoffset="201.1" id="rb"/></svg><div class="rp" id="rb-p">0%</div><div class="rl2">Biz</div></div>
+          <div class="rw"><svg width="76" height="76" class="rsvg"><circle class="rbg" cx="38" cy="38" r="32"/><circle class="rc" cx="38" cy="38" r="32" stroke="#10b981" stroke-dasharray="201.1" stroke-dashoffset="201.1" id="rg"/></svg><div class="rp" id="rg-p">0%</div><div class="rl2">Geo</div></div>
+        </div>
+      </div>
+
+    </div><!-- /side-col -->
+
+  </div><!-- /main-layout -->
 
 </div>
 
@@ -1150,15 +1258,21 @@ function toggleAlerts(){
 }
 function updateAlertsBtn(){
   var btn=document.getElementById('alertsToggleBtn');
+  var icon=document.getElementById('alerts-icon');
+  var lbl=document.getElementById('alerts-label');
   if(!btn)return;
   if(alertsMuted){
-    btn.textContent='🔔 Alerts On';
+    // Alerts are currently OFF — show that state clearly
+    if(icon)icon.textContent='🔕';
+    if(lbl)lbl.textContent='Alerts: OFF';
     btn.classList.add('muted');
-    btn.title='Click to re-enable fullscreen breaking news alerts';
+    btn.title='Fullscreen alerts are OFF — click to turn ON';
   } else {
-    btn.textContent='🔕 Mute Alerts';
+    // Alerts are currently ON — show that state clearly
+    if(icon)icon.textContent='🔔';
+    if(lbl)lbl.textContent='Alerts: ON';
     btn.classList.remove('muted');
-    btn.title='Click to suppress all fullscreen news alerts';
+    btn.title='Fullscreen alerts are ON — click to turn OFF';
   }
 }
 var bnFsTimeout=null,bnTickTimeout=null;
@@ -1391,18 +1505,34 @@ function setFmSubj(s,btn){
 function toggleFmSound(){
   fmSoundOn=!fmSoundOn;
   var btn=document.getElementById('fm-sound-btn');
+  var lbl=document.getElementById('fm-sound-lbl');
   var audio=document.getElementById('fm-audio');
+  var img=btn?btn.querySelector('img'):null;
   if(fmSoundOn){
-    btn.textContent='🔊 Sound';btn.classList.add('on');
-    // White noise via a public stream
-    audio.src='https://www.soundjay.com/nature/sounds/rain-01.mp3';
-    audio.volume=0.15;
-    audio.play().catch(function(){
-      // If blocked, just toggle off silently
-      fmSoundOn=false;btn.textContent='🔇 Sound';btn.classList.remove('on');
+    if(lbl)lbl.textContent='Connecting...';
+    if(img)img.style.opacity='1';
+    if(btn)btn.classList.add('on');
+    // Try Midwest Radio streams in order
+    audio.src='https://playerservices.streamtheworld.com/api/livestream-redirect/MIDWEST_RADIO_ADP.aac';
+    audio.volume=0.35;
+    audio.play().then(function(){
+      if(lbl)lbl.textContent='Radio On';
+    }).catch(function(){
+      // Try MP3 fallback
+      audio.src='https://playerservices.streamtheworld.com/api/livestream-redirect/MIDWEST_RADIO.mp3';
+      audio.play().then(function(){
+        if(lbl)lbl.textContent='Radio On';
+      }).catch(function(){
+        fmSoundOn=false;
+        if(lbl)lbl.textContent='Radio Off';
+        if(img)img.style.opacity='.7';
+        if(btn)btn.classList.remove('on');
+      });
     });
   } else {
-    btn.textContent='🔇 Sound';btn.classList.remove('on');
+    if(lbl)lbl.textContent='Radio Off';
+    if(img)img.style.opacity='.7';
+    if(btn)btn.classList.remove('on');
     audio.pause();audio.src='';
   }
 }
@@ -1464,12 +1594,15 @@ function exitFocus(){
   document.getElementById('focus-mode').classList.remove('open');
   document.body.style.overflow='';
   fmRunning=false;
-  // stop ambient sound
   var audio=document.getElementById('fm-audio');
   if(audio){audio.pause();audio.src='';}
   fmSoundOn=false;
   var sb=document.getElementById('fm-sound-btn');
-  if(sb){sb.textContent='🔇 Sound';sb.classList.remove('on');}
+  var lbl=document.getElementById('fm-sound-lbl');
+  if(sb){sb.classList.remove('on');}
+  if(lbl)lbl.textContent='Radio Off';
+  var img=sb?sb.querySelector('img'):null;
+  if(img)img.style.opacity='.7';
 }
 
 function fmToggle(){
@@ -2031,25 +2164,100 @@ document.getElementById('qTxt').textContent=QUOTES[doy()%QUOTES.length];
 // ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// CHECKLIST
+// ═══════════════════════════════════════════════════
+var clTab='daily';
+if(!S.checklists)S.checklists={daily:[],weekly:[]};
+
+function switchCl(tab,btn){
+  clTab=tab;
+  document.querySelectorAll('.cl-tab').forEach(function(t){t.classList.remove('on');});
+  btn.classList.add('on');
+  renderCl();
+}
+function addClItem(){
+  var inp=document.getElementById('cl-input');
+  var text=(inp.value||'').trim();
+  if(!text)return;
+  S.checklists[clTab].push({id:Date.now(),text:text,done:false});
+  inp.value='';
+  save();renderCl();
+}
+function toggleClItem(id){
+  var list=S.checklists[clTab];
+  for(var i=0;i<list.length;i++){if(list[i].id===id){list[i].done=!list[i].done;break;}}
+  save();renderCl();
+}
+function delClItem(id){
+  S.checklists[clTab]=S.checklists[clTab].filter(function(x){return x.id!==id;});
+  save();renderCl();
+}
+function clearDoneCl(){
+  S.checklists[clTab]=S.checklists[clTab].filter(function(x){return !x.done;});
+  save();renderCl();
+}
+function renderCl(){
+  var list=S.checklists[clTab]||[];
+  var c=document.getElementById('cl-list');
+  if(!c)return;
+  c.innerHTML='';
+  if(!list.length){
+    c.innerHTML='<div class="cl-empty">No tasks yet — add one above</div>';
+  } else {
+    list.forEach(function(item){
+      var div=document.createElement('div');
+      div.className='cl-item'+(item.done?' done':'');
+      div.innerHTML='<div class="cl-check" onclick="toggleClItem('+item.id+')">'+(item.done?'✓':'')+'</div>'
+        +'<div class="cl-text" onclick="toggleClItem('+item.id+')">'+item.text+'</div>'
+        +'<div class="cl-del" onclick="delClItem('+item.id+')">×</div>';
+      c.appendChild(div);
+    });
+  }
+  var done=list.filter(function(x){return x.done;}).length;
+  var total=list.length;
+  var cnt=document.getElementById('cl-count');
+  if(cnt)cnt.textContent=done+'/'+total+' done';
+}
+
+// ═══════════════════════════════════════════════════
+// PINNED NOTES
+// ═══════════════════════════════════════════════════
+var pnSaveT=null;
+function savePinnedNote(){
+  clearTimeout(pnSaveT);
+  var el=document.getElementById('pn-area');
+  if(!el)return;
+  S.pinnedNote=el.value;
+  var sv=document.getElementById('pn-saved');
+  if(sv)sv.textContent='Saving...';
+  pnSaveT=setTimeout(function(){
+    save();
+    var sv2=document.getElementById('pn-saved');
+    if(sv2){sv2.textContent='✓ Saved';sv2.classList.add('ok');setTimeout(function(){sv2.textContent='Auto-saved';sv2.classList.remove('ok');},1400);}
+  },600);
+}
+function loadPinnedNote(){
+  var el=document.getElementById('pn-area');
+  if(el&&S.pinnedNote)el.value=S.pinnedNote;
+}
+
 function init(){
   setNavDate();
   updateAlertsBtn();
   cd();setInterval(cd,1000);
-  // Top-of-hour check every 15 seconds
   setInterval(checkTopOfHour,15000);
-  // Hourly RSS refresh
   setInterval(function(){fetchGBNRSS(true);},3600000);
-  // 30-minute refresh
   setInterval(function(){fetchGBNRSS();},1800000);
   ['econ','biz','geo'].forEach(function(s){renderTopics(s);});
   updateRings();renderLog();renderHmap();updateStats();renderPPQ();renderTip();
-  buildPhotoDots();loadNotes();
+  buildPhotoDots();loadNotes();loadPinnedNote();
+  if(!S.checklists)S.checklists={daily:[],weekly:[]};
+  renderCl();
   fetchGBNRSS(true);
   if(S.sessions)document.getElementById('sess-ct').textContent=S.sessions+' sessions done today';
   scheduleBreaking();
-  // First breaking after RSS load
   setTimeout(triggerBreakingRandom,25000);
-  // Photo auto-advance
   setInterval(function(){if(document.getElementById('mainPage').style.display!=='none')photoGo((pIdx+1)%pTotal);},6000);
 }
 </script>
