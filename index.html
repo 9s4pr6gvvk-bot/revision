@@ -727,6 +727,7 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
       <button class="game-tab on" onclick="switchGame('snake',this)">🐍 Snake</button>
       <button class="game-tab" onclick="switchGame('2048',this)">🔢 2048</button>
       <button class="game-tab" onclick="switchGame('memory',this)">🧠 Memory</button>
+      <button class="game-tab" onclick="switchGame('zip',this)">🔗 Zip</button>
     </div>
     <div class="game-body" id="game-body"></div>
   </div>
@@ -1498,7 +1499,7 @@ function setFmSubj(s,btn){
     p.style.opacity='0.4';p.style.fontWeight='500';
   });
   if(btn){btn.style.opacity='1';btn.style.fontWeight='700';}
-  var labels={econ:'📈 Economics — Theme 4 focus',biz:'📊 Business — Global Strategy',geo:'🌍 Geography — Paper 3 prep',''  :'Select subject for this session'};
+  var labels={econ:'📈 Economics — Theme 4 focus',biz:'📊 Business — Global Strategy',geo:'🌍 Geography — Paper 3 prep','':'Select subject for this session'};
   document.getElementById('fm-subj-label').textContent=labels[s]||'Session active';
 }
 
@@ -1969,9 +1970,15 @@ function switchGame(g,btn){
   btn.classList.add('on');
   currentGame=g;
   if(snakeGame)snakeGame.stop();
-  document.getElementById('game-title').textContent=g==='snake'?'🐍 Snake — Break Time':g==='2048'?'🔢 2048 — Break Time':'🧠 Memory — Break Time';
+  document.onkeydown=null;
+  var titles={snake:'🐍 Snake — Break Time','2048':'🔢 2048 — Break Time',memory:'🧠 Memory — Break Time',zip:'🔗 Zip — Break Time'};
+  document.getElementById('game-title').textContent=titles[g]||'🎮 Break Time';
+  // Zip needs a wider box
+  var box=document.querySelector('.game-box');
+  box.style.maxWidth=g==='zip'?'600px':'520px';
   if(g==='snake')initSnake();
   else if(g==='2048')init2048();
+  else if(g==='zip')initZip();
   else initMemory();
 }
 
@@ -2136,6 +2143,286 @@ function initMemory(){
   };
   snakeGame={start:function(){},stop:function(){clearInterval(timeInt);}};
 }
+
+// ── ZIP GAME ──
+function initZip(){
+  var body=document.getElementById('game-body');
+  var SIZE=5;
+  // Prebuilt puzzles: each is {size, numbers:{cellIndex:number}, path:[cellIndex,...]}
+  var PUZZLES=[
+    // 5x5 puzzle 1
+    {size:5,numbers:{0:1,4:2,24:3,20:4,12:5},
+     path:[0,1,2,3,4,9,8,7,6,11,16,17,18,13,14,19,24,23,22,21,20,15,10,5,6,7,8,9,14,13,12]},
+    // 5x5 puzzle 2  
+    {size:5,numbers:{0:1,2:2,14:3,22:4,24:5},
+     path:[0,5,10,15,20,21,22,23,24,19,18,17,16,11,6,1,2,3,4,9,8,7,12,13,14]},
+    // 5x5 puzzle 3
+    {size:5,numbers:{0:1,4:2,9:3,20:4,24:5},
+     path:[0,1,2,3,4,9,8,7,6,11,12,13,14,19,18,17,16,15,10,5,6,7,8,9,14,13,12,17,22,21,20,21,22,23,24]},
+    // 5x5 puzzle 4
+    {size:5,numbers:{0:1,19:2,5:3,24:4,12:5},
+     path:[0,1,2,3,4,9,14,13,8,7,6,11,16,17,18,23,24,19,18,13,12,7,8,9,14]},
+    // 5x5 puzzle 5
+    {size:5,numbers:{4:1,0:2,20:3,24:4,12:5},
+     path:[4,3,2,1,0,5,6,7,8,9,14,13,12,11,10,15,16,17,18,19,24,23,22,21,20]}
+  ];
+
+  // Build a random valid puzzle using a snake-scan path with numbers at intervals
+  function makeSnakePuzzle(sz, numCount){
+    var path=[];
+    for(var r=0;r<sz;r++){
+      if(r%2===0){for(var c=0;c<sz;c++)path.push(r*sz+c);}
+      else{for(var c=sz-1;c>=0;c--)path.push(r*sz+c);}
+    }
+    var total=sz*sz;
+    var numbers={};
+    var step=Math.floor(total/(numCount-1));
+    for(var n=0;n<numCount;n++){
+      var pi=n===numCount-1?total-1:n*step;
+      numbers[path[pi]]=n+1;
+    }
+    return{size:sz,numbers:numbers,path:path};
+  }
+
+  var puzIdx=doy()%PUZZLES.length;
+  var puz=PUZZLES[puzIdx];
+  SIZE=puz.size;
+  var NUMS=puz.numbers;
+  var SOLUTION=puz.path;
+  var TOTAL=SIZE*SIZE;
+  var NCOUNT=Object.keys(NUMS).length;
+
+  var userPath=[];
+  var dragging=false;
+  var solved=false;
+  var startTime=Date.now();
+  var timerInt=null;
+
+  var CPXS=Math.min(54,Math.floor(460/SIZE));
+
+  body.innerHTML=
+    '<div class="game-info" style="margin-bottom:10px;">'
+    +'<div class="game-score" id="zip-status" style="font-size:15px;">Start on 1 — visit every cell in order</div>'
+    +'<div id="zip-timer" style="font-size:13px;color:#666;">0s</div>'
+    +'</div>'
+    +'<div id="zip-grid" style="display:inline-grid;grid-template-columns:repeat('+SIZE+','+CPXS+'px);gap:3px;padding:8px;background:rgba(255,255,255,.04);border-radius:12px;touch-action:none;user-select:none;cursor:crosshair;"></div>'
+    +'<div class="game-msg" id="zip-msg" style="margin-top:10px;min-height:24px;"></div>'
+    +'<div style="display:flex;gap:8px;margin-top:10px;">'
+    +'<button class="game-start-btn" style="flex:1;" onclick="initZip()">New Puzzle</button>'
+    +'<button class="game-start-btn" style="flex:1;background:rgba(77,163,255,.13);color:var(--bl);border:1px solid rgba(77,163,255,.3);" onclick="zipHint()">Hint</button>'
+    +'</div>'
+    +'<div style="font-size:11px;color:#444;margin-top:8px;text-align:center;">Click 1 to start · Drag to draw path · Must fill every cell</div>';
+
+  var grid=document.getElementById('zip-grid');
+  var cells=[];
+
+  for(var i=0;i<TOTAL;i++){
+    var cell=document.createElement('div');
+    cell.style.cssText='width:'+CPXS+'px;height:'+CPXS+'px;border-radius:7px;'
+      +'background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);'
+      +'display:flex;align-items:center;justify-content:center;'
+      +'font-family:Syne,sans-serif;font-weight:800;font-size:17px;color:#f0ede8;'
+      +'transition:background .1s,border .1s;';
+    if(NUMS[i]!==undefined){
+      cell.textContent=NUMS[i];
+      cell.style.background='rgba(0,87,168,.4)';
+      cell.style.border='2px solid rgba(77,163,255,.8)';
+      cell.style.fontSize='18px';
+    }
+    cell.dataset.idx=String(i);
+    cells.push(cell);
+    grid.appendChild(cell);
+  }
+
+  function isAdj(a,b){
+    var ar=Math.floor(a/SIZE),ac=a%SIZE;
+    var br=Math.floor(b/SIZE),bc=b%SIZE;
+    return(ar===br&&Math.abs(ac-bc)===1)||(ac===bc&&Math.abs(ar-br)===1);
+  }
+
+  function nextRequired(){
+    var numsSeen=userPath.filter(function(x){return NUMS[x]!==undefined;}).map(function(x){return NUMS[x];});
+    if(!numsSeen.length)return 1;
+    return Math.max.apply(null,numsSeen)+1;
+  }
+
+  function canAddCell(idx){
+    if(userPath.indexOf(idx)>=0)return false;
+    if(!userPath.length)return NUMS[idx]===1;
+    var last=userPath[userPath.length-1];
+    if(!isAdj(last,idx))return false;
+    if(NUMS[idx]!==undefined){
+      var nr=nextRequired();
+      if(NUMS[idx]!==nr)return false;
+    }
+    return true;
+  }
+
+  function hue(step){
+    return'hsl('+Math.round(step/Math.max(1,TOTAL-1)*220)+',80%,60%)';
+  }
+
+  function redraw(){
+    for(var i=0;i<TOTAL;i++){
+      var c=cells[i];
+      var pi=userPath.indexOf(i);
+      var isNum=NUMS[i]!==undefined;
+      if(pi>=0){
+        var col=hue(pi);
+        c.style.background=isNum?'rgba(0,87,168,.7)':col+'25';
+        c.style.border='2px solid '+col;
+        c.style.color=isNum?'#fff':col;
+        if(!isNum){c.textContent='';}
+      } else {
+        c.style.background=isNum?'rgba(0,87,168,.4)':'rgba(255,255,255,.06)';
+        c.style.border=isNum?'2px solid rgba(77,163,255,.8)':'1px solid rgba(255,255,255,.1)';
+        c.style.color='#f0ede8';
+        if(!isNum){c.textContent='';}
+      }
+    }
+    updateStatus();
+  }
+
+  function updateStatus(){
+    var st=document.getElementById('zip-status');
+    if(!st)return;
+    if(!userPath.length){st.textContent='Click 1 to start your path';return;}
+    var nr=nextRequired();
+    if(nr>NCOUNT){
+      st.textContent=userPath.length+'/'+TOTAL+' cells covered — keep going!';
+    } else {
+      st.textContent='Next: '+nr+' — '+userPath.length+'/'+TOTAL+' cells';
+    }
+  }
+
+  function checkWin(){
+    if(userPath.length!==TOTAL)return;
+    var allNums=Object.keys(NUMS).every(function(k){return userPath.indexOf(parseInt(k))>=0;});
+    if(!allNums)return;
+    var order=userPath.filter(function(x){return NUMS[x]!==undefined;}).map(function(x){return NUMS[x];});
+    for(var i=1;i<order.length;i++){if(order[i]!==order[i-1]+1)return;}
+    solved=true;
+    dragging=false;
+    clearInterval(timerInt);
+    var secs=Math.floor((Date.now()-startTime)/1000);
+    cells.forEach(function(c,i){
+      if(userPath.indexOf(i)>=0){
+        c.style.background='rgba(16,185,129,.3)';
+        c.style.border='2px solid #10b981';
+      }
+    });
+    var msg=document.getElementById('zip-msg');
+    if(msg)msg.innerHTML='Solved in <strong style="color:#10b981;">'+secs+'s</strong> — nice work!';
+    var st=document.getElementById('zip-status');
+    if(st)st.textContent='Path complete!';
+  }
+
+  function startTimer(){
+    if(timerInt)return;
+    timerInt=setInterval(function(){
+      var el=document.getElementById('zip-timer');
+      if(el)el.textContent=Math.floor((Date.now()-startTime)/1000)+'s';
+    },1000);
+  }
+
+  function getIdxFromPoint(x,y){
+    var els=document.elementsFromPoint(x,y);
+    for(var i=0;i<els.length;i++){
+      if(els[i].dataset&&els[i].dataset.idx!==undefined){
+        return parseInt(els[i].dataset.idx);
+      }
+    }
+    return -1;
+  }
+
+  grid.addEventListener('mousedown',function(e){
+    e.preventDefault();
+    var idx=parseInt(e.target.dataset.idx);
+    if(isNaN(idx))return;
+    if(NUMS[idx]!==1)return;
+    userPath=[idx];
+    dragging=true;
+    startTimer();
+    redraw();
+  });
+
+  grid.addEventListener('mousemove',function(e){
+    if(!dragging||solved)return;
+    var idx=parseInt(e.target.dataset.idx);
+    if(isNaN(idx))return;
+    var last=userPath[userPath.length-1];
+    if(idx===last)return;
+    // backtrack
+    if(userPath.length>=2&&userPath[userPath.length-2]===idx){
+      userPath.pop();
+      redraw();
+      return;
+    }
+    if(canAddCell(idx)){
+      userPath.push(idx);
+      redraw();
+      checkWin();
+    }
+  });
+
+  window.addEventListener('mouseup',function(){dragging=false;});
+
+  grid.addEventListener('touchstart',function(e){
+    e.preventDefault();
+    var t=e.touches[0];
+    var idx=getIdxFromPoint(t.clientX,t.clientY);
+    if(idx<0||NUMS[idx]!==1)return;
+    userPath=[idx];
+    dragging=true;
+    startTimer();
+    redraw();
+  },{passive:false});
+
+  grid.addEventListener('touchmove',function(e){
+    e.preventDefault();
+    if(!dragging||solved)return;
+    var t=e.touches[0];
+    var idx=getIdxFromPoint(t.clientX,t.clientY);
+    if(idx<0)return;
+    var last=userPath[userPath.length-1];
+    if(idx===last)return;
+    if(userPath.length>=2&&userPath[userPath.length-2]===idx){
+      userPath.pop();redraw();return;
+    }
+    if(canAddCell(idx)){userPath.push(idx);redraw();checkWin();}
+  },{passive:false});
+
+  grid.addEventListener('touchend',function(){dragging=false;});
+
+  window.zipHint=function(){
+    if(solved)return;
+    if(!userPath.length){
+      userPath=[SOLUTION[0]];startTimer();redraw();return;
+    }
+    var last=userPath[userPath.length-1];
+    var pi=SOLUTION.indexOf(last);
+    if(pi>=0&&pi<SOLUTION.length-1){
+      var next=SOLUTION[pi+1];
+      if(userPath.indexOf(next)<0&&canAddCell(next)){
+        userPath.push(next);redraw();checkWin();
+      }
+    }
+  };
+
+  document.onkeydown=function(e){
+    var tag=document.activeElement.tagName;
+    if(tag==='INPUT'||tag==='TEXTAREA')return;
+    if(e.key==='Escape'){closeGame();}
+  };
+
+  snakeGame={start:function(){},stop:function(){
+    clearInterval(timerInt);
+    document.onkeydown=null;
+  }};
+
+  redraw();
+}
+
 
 // ═══════════════════════════════════════════════════
 // KEYBOARD
