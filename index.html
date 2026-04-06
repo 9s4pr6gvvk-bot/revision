@@ -102,21 +102,52 @@ img{display:block;max-width:100%;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
 
 /* ── FOCUS MODE ── */
-#focus-mode{position:fixed;inset:0;z-index:5000;background:#080808;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+#focus-mode{position:fixed;inset:0;z-index:5000;background:#080808;display:none;flex-direction:column;align-items:center;justify-content:center;gap:0;}
 #focus-mode.open{display:flex;}
-.fm-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#444;}
-.fm-time{font-family:'Syne',sans-serif;font-size:clamp(80px,18vw,130px);font-weight:800;color:#f0ede8;line-height:1;transition:color .3s;}
+.fm-top-bar{position:absolute;top:0;left:0;right:0;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;}
+.fm-top-left{display:flex;align-items:center;gap:10px;}
+.fm-top-right{display:flex;align-items:center;gap:8px;}
+.fm-logo{height:32px;filter:brightness(0) invert(1);opacity:.4;}
+.fm-session-badge{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#333;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:4px 10px;border-radius:20px;}
+.fm-tiny-btn{padding:6px 12px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#666;transition:all .2s;}
+.fm-tiny-btn:hover{color:#aaa;background:rgba(255,255,255,.09);}
+.fm-tiny-btn.on{color:#6ee7b7;border-color:rgba(16,185,129,.35);background:rgba(16,185,129,.08);}
+.fm-center{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:560px;padding:0 24px;}
+.fm-subj-row{display:flex;gap:8px;margin-bottom:4px;}
+.fm-subj-pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:transparent;color:#555;font-family:'Outfit',sans-serif;transition:all .2s;}
+.fm-subj-pill:hover{color:#aaa;}
+.fm-subj-pill.fe{border-color:rgba(59,130,246,.4);color:#93c5fd;background:rgba(59,130,246,.1);}
+.fm-subj-pill.fb{border-color:rgba(245,158,11,.4);color:#fcd34d;background:rgba(245,158,11,.08);}
+.fm-subj-pill.fg{border-color:rgba(16,185,129,.4);color:#6ee7b7;background:rgba(16,185,129,.08);}
+.fm-subj-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#333;height:16px;text-align:center;}
+.fm-time{font-family:'Syne',sans-serif;font-size:clamp(88px,20vw,148px);font-weight:800;color:#f0ede8;line-height:1;transition:color .4s;letter-spacing:-.04em;cursor:default;}
 .fm-time.running{color:var(--bl);}
-.fm-prog{width:300px;max-width:88vw;height:3px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;}
+.fm-time.done{color:#10b981;}
+.fm-time.warning{color:#f59e0b;}
+.fm-prog{width:100%;height:3px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
 .fm-prog-bar{height:100%;background:linear-gradient(to right,var(--blue),var(--bl));border-radius:3px;transition:width 1s linear;}
-.fm-btns{display:flex;gap:10px;margin-top:6px;}
-.fm-btn{padding:12px 26px;border-radius:12px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .2s;}
+.fm-btns{display:flex;gap:10px;}
+.fm-btn{padding:13px 28px;border-radius:12px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .2s;}
 .fm-start{background:var(--blue);color:#fff;}
 .fm-start:hover{background:#006ad4;}
-.fm-exit{background:rgba(255,255,255,.07);color:#999;border:1px solid rgba(255,255,255,.13);}
-.fm-exit:hover{background:rgba(255,255,255,.13);}
-.fm-quote{font-size:14px;color:#444;font-style:italic;text-align:center;max-width:420px;line-height:1.7;margin-top:10px;}
-.fm-subj-display{font-size:12px;color:#333;text-align:center;letter-spacing:.1em;text-transform:uppercase;}
+.fm-reset-btn{background:rgba(255,255,255,.06);color:#666;border:1px solid rgba(255,255,255,.1) !important;}
+.fm-reset-btn:hover{background:rgba(255,255,255,.1);color:#aaa;}
+.fm-exit{background:transparent;color:#444;border:1px solid rgba(255,255,255,.08) !important;}
+.fm-exit:hover{color:#888;background:rgba(255,255,255,.05);}
+.fm-bottom{position:absolute;bottom:0;left:0;right:0;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;}
+.fm-quote{font-size:13px;color:#2a2a2a;font-style:italic;max-width:400px;line-height:1.6;}
+.fm-quote.running{color:#333;}
+.fm-stats-row{display:flex;gap:18px;}
+.fm-stat{text-align:right;}
+.fm-stat-val{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#333;}
+.fm-stat-val.running{color:#444;}
+.fm-stat-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#282828;}
+.fm-stat-lbl.running{color:#333;}
+.fm-shortcut{font-size:11px;color:#222;letter-spacing:.06em;}
+.fm-goal-row{display:flex;align-items:center;gap:8px;}
+.fm-goal-input{background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.08);color:#555;font-family:'Outfit',sans-serif;font-size:13px;padding:3px 6px;outline:none;width:200px;text-align:center;}
+.fm-goal-input:focus{border-color:rgba(255,255,255,.2);color:#888;}
+.fm-goal-input::placeholder{color:#2a2a2a;}
 
 /* ── PHOTO FULLSCREEN ── */
 .fsm{position:fixed;inset:0;z-index:600;background:#000;display:none;align-items:center;justify-content:center;}
@@ -218,6 +249,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;justify-content
 .alerts-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14) !important;color:#888;}
 .alerts-btn:hover{background:rgba(255,255,255,.12);}
 .alerts-btn.muted{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3) !important;color:#6ee7b7;}
+.gbn-live-embed{position:relative;width:100%;padding-top:56.25%;background:#000;max-height:260px;overflow:hidden;}
 .gbn-live-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:none;display:block;}
 .gbn-live-play-btn{width:60px;height:60px;background:rgba(185,28,28,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;border:2px solid rgba(255,255,255,.3);transition:all .2s;}
 
@@ -582,14 +614,52 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
 
 <!-- FOCUS MODE -->
 <div id="focus-mode">
-  <div class="fm-label">FOCUS SESSION</div>
-  <div class="fm-time" id="fm-time">25:00</div>
-  <div class="fm-prog"><div class="fm-prog-bar" id="fm-bar" style="width:0%"></div></div>
-  <div class="fm-btns">
-    <button class="fm-btn fm-start" id="fm-btn" onclick="fmToggle()">▶ Start</button>
-    <button class="fm-btn fm-exit" onclick="exitFocus()">← Exit Focus</button>
+  <!-- Top bar -->
+  <div class="fm-top-bar">
+    <div class="fm-top-left">
+      <img class="fm-logo" src="https://raw.githubusercontent.com/9s4pr6gvvk-bot/asset/refs/heads/main/Franks_Media__1_-removebg-preview.png" alt="">
+      <div class="fm-session-badge" id="fm-session-badge">Session 1</div>
+    </div>
+    <div class="fm-top-right">
+      <button class="fm-tiny-btn" id="fm-sound-btn" onclick="toggleFmSound()">🔇 Sound</button>
+      <button class="fm-tiny-btn" onclick="exitFocus()">✕ Exit</button>
+    </div>
   </div>
-  <div class="fm-quote" id="fm-quote"></div>
+
+  <!-- Centre -->
+  <div class="fm-center">
+    <div class="fm-subj-row">
+      <button class="fm-subj-pill" id="fms-none" onclick="setFmSubj('',this)">None</button>
+      <button class="fm-subj-pill fe" id="fms-econ" onclick="setFmSubj('econ',this)">📈 Econ</button>
+      <button class="fm-subj-pill fb" id="fms-biz" onclick="setFmSubj('biz',this)">📊 Business</button>
+      <button class="fm-subj-pill fg" id="fms-geo" onclick="setFmSubj('geo',this)">🌍 Geography</button>
+    </div>
+    <div class="fm-subj-label" id="fm-subj-label">Select subject for this session</div>
+    <div class="fm-time" id="fm-time">25:00</div>
+    <div class="fm-prog"><div class="fm-prog-bar" id="fm-bar" style="width:0%"></div></div>
+    <div class="fm-btns">
+      <button class="fm-btn fm-start" id="fm-btn" onclick="fmToggle()">▶ Start</button>
+      <button class="fm-btn fm-reset-btn" onclick="fmReset()">↺ Reset</button>
+      <button class="fm-btn fm-exit" onclick="exitFocus()">← Back</button>
+    </div>
+    <div class="fm-goal-row">
+      <input class="fm-goal-input" id="fm-goal" placeholder="What are you working on? (optional)" maxlength="60">
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="fm-bottom">
+    <div class="fm-quote" id="fm-quote"></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+      <div class="fm-stats-row">
+        <div class="fm-stat"><div class="fm-stat-val" id="fm-sessions-done">0</div><div class="fm-stat-lbl">Sessions</div></div>
+        <div class="fm-stat"><div class="fm-stat-val" id="fm-total-mins">0m</div><div class="fm-stat-lbl">Today</div></div>
+      </div>
+      <div class="fm-shortcut">Space to start/pause · Esc to exit</div>
+    </div>
+  </div>
+
+  <audio id="fm-audio" loop></audio>
 </div>
 
 <!-- GAME MODAL -->
@@ -1072,6 +1142,11 @@ function toggleAlerts(){
   alertsMuted=!alertsMuted;
   localStorage.setItem('fm_alerts_muted',alertsMuted?'1':'0');
   updateAlertsBtn();
+  // If muting right now, dismiss any visible alerts immediately
+  if(alertsMuted){
+    closeBnFs();
+    closeBn();
+  }
 }
 function updateAlertsBtn(){
   var btn=document.getElementById('alertsToggleBtn');
@@ -1079,18 +1154,16 @@ function updateAlertsBtn(){
   if(alertsMuted){
     btn.textContent='🔔 Alerts On';
     btn.classList.add('muted');
+    btn.title='Click to re-enable fullscreen breaking news alerts';
   } else {
     btn.textContent='🔕 Mute Alerts';
     btn.classList.remove('muted');
+    btn.title='Click to suppress all fullscreen news alerts';
   }
 }
-function triggerBreaking(headline,skipTicker,force){
-  // If alerts muted, skip fullscreen unless manually forced (force=true)
-  if(alertsMuted&&!force){
-    // Still show ticker bar even when muted (less intrusive)
-    if(!skipTicker)showTicker(headline);
-    return;
-  }
+var bnFsTimeout=null,bnTickTimeout=null;
+function triggerBreaking(headline,skipTicker){
+  if(alertsMuted)return; // fully blocked when muted
   document.getElementById('bn-fs-headline').textContent=headline;
   var bar=document.getElementById('bn-fs-bar');
   bar.style.transition='none';bar.style.width='100%';
@@ -1110,6 +1183,7 @@ function closeBnFs(){
   clearTimeout(bnFsTimeout);
 }
 function showTicker(headline){
+  if(alertsMuted)return; // respect mute for ticker too
   var reps=8;
   function fillEl(el){el.innerHTML='';for(var i=0;i<reps;i++){var s=document.createElement('span');s.className='bn-seg';s.textContent=headline;el.appendChild(s);if(i<reps-1){var dot=document.createElement('span');dot.className='bn-dot';dot.textContent='●';el.appendChild(dot);}}}
   fillEl(document.getElementById('bn-a'));fillEl(document.getElementById('bn-b'));
@@ -1122,8 +1196,12 @@ function showTicker(headline){
 }
 function closeBn(){document.getElementById('bn-bar').classList.remove('show');clearTimeout(bnTickTimeout);}
 function triggerBreakingRandom(){
+  // Manual button — always fires, temporarily bypasses mute
   var pool=GBN.length>0?GBN:GBN_FALLBACK;
-  triggerBreaking(pool[Math.floor(Math.random()*pool.length)].title);
+  var headline=pool[Math.floor(Math.random()*pool.length)].title;
+  var wasMuted=alertsMuted;alertsMuted=false;
+  triggerBreaking(headline);
+  alertsMuted=wasMuted;
 }
 function scheduleBreaking(){
   var delay=75000+Math.random()*55000;
@@ -1291,18 +1369,109 @@ function gbnNav(dir){gbnGo(gbnIdx+dir);}
 // ═══════════════════════════════════════════════════
 // FOCUS MODE
 // ═══════════════════════════════════════════════════
-var fmRunning=false;
+// ═══════════════════════════════════════════════════
+// FOCUS MODE
+// ═══════════════════════════════════════════════════
+var fmRunning=false,fmSubj='',fmSoundOn=false;
+var FM_SOUNDS={
+  rain:'https://www.soundjay.com/nature/sounds/rain-01.mp3',
+  // fallback: use a lofi radio if direct audio fails
+};
+
+function setFmSubj(s,btn){
+  fmSubj=s;
+  document.querySelectorAll('.fm-subj-pill').forEach(function(p){
+    p.style.opacity='0.4';p.style.fontWeight='500';
+  });
+  if(btn){btn.style.opacity='1';btn.style.fontWeight='700';}
+  var labels={econ:'📈 Economics — Theme 4 focus',biz:'📊 Business — Global Strategy',geo:'🌍 Geography — Paper 3 prep',''  :'Select subject for this session'};
+  document.getElementById('fm-subj-label').textContent=labels[s]||'Session active';
+}
+
+function toggleFmSound(){
+  fmSoundOn=!fmSoundOn;
+  var btn=document.getElementById('fm-sound-btn');
+  var audio=document.getElementById('fm-audio');
+  if(fmSoundOn){
+    btn.textContent='🔊 Sound';btn.classList.add('on');
+    // White noise via a public stream
+    audio.src='https://www.soundjay.com/nature/sounds/rain-01.mp3';
+    audio.volume=0.15;
+    audio.play().catch(function(){
+      // If blocked, just toggle off silently
+      fmSoundOn=false;btn.textContent='🔇 Sound';btn.classList.remove('on');
+    });
+  } else {
+    btn.textContent='🔇 Sound';btn.classList.remove('on');
+    audio.pause();audio.src='';
+  }
+}
+
+function fmReset(){
+  if(tRunning)toggleTimer(); // pause main timer
+  resetTimer();
+  document.getElementById('fm-time').textContent=document.getElementById('tDisp').textContent;
+  document.getElementById('fm-time').className='fm-time';
+  document.getElementById('fm-bar').style.width='0%';
+  document.getElementById('fm-btn').textContent='▶ Start';
+  fmRunning=false;
+}
+
+function updateFmStats(){
+  var sc=S.sessions||0;
+  document.getElementById('fm-sessions-done').textContent=sc;
+  var today=todayKey();
+  var tm=S.log.filter(function(e){return e.date===today;}).reduce(function(a,e){return a+e.mins;},0);
+  var h=Math.floor(tm/60),m=tm%60;
+  document.getElementById('fm-total-mins').textContent=h>0?h+'h '+m+'m':m+'m';
+  // Animate stats when running
+  var runCls=fmRunning?' running':'';
+  ['fm-sessions-done','fm-total-mins'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.className='fm-stat-val'+runCls;
+  });
+  document.querySelectorAll('.fm-stat-lbl').forEach(function(el){
+    el.className='fm-stat-lbl'+runCls;
+  });
+  var q=document.getElementById('fm-quote');
+  if(q)q.className='fm-quote'+runCls;
+}
+
 function enterFocus(){
   document.getElementById('focus-mode').classList.add('open');
   document.body.style.overflow='hidden';
+  // Sync timer display
   document.getElementById('fm-time').textContent=document.getElementById('tDisp').textContent;
   document.getElementById('fm-time').className='fm-time'+(tRunning?' running':'');
   document.getElementById('fm-bar').style.width=tRunning?((tTotal-tSecs)/tTotal*100)+'%':'0%';
-  document.getElementById('fm-quote').textContent='"'+QUOTES[doy()%QUOTES.length]+'"';
   document.getElementById('fm-btn').textContent=tRunning?'⏸ Pause':'▶ Start';
   fmRunning=tRunning;
+  // Quote
+  document.getElementById('fm-quote').textContent='"'+QUOTES[doy()%QUOTES.length]+'"';
+  // Session badge
+  document.getElementById('fm-session-badge').textContent='Session '+(( S.sessions||0)+1);
+  // Stats
+  updateFmStats();
+  // Reset subj pills opacity
+  document.querySelectorAll('.fm-subj-pill').forEach(function(p){p.style.opacity='1';p.style.fontWeight='600';});
+  if(fmSubj){
+    var el=document.getElementById('fms-'+fmSubj);
+    if(el){document.querySelectorAll('.fm-subj-pill').forEach(function(p){p.style.opacity='.4';});el.style.opacity='1';el.style.fontWeight='700';}
+  }
 }
-function exitFocus(){document.getElementById('focus-mode').classList.remove('open');document.body.style.overflow='';fmRunning=false;}
+
+function exitFocus(){
+  document.getElementById('focus-mode').classList.remove('open');
+  document.body.style.overflow='';
+  fmRunning=false;
+  // stop ambient sound
+  var audio=document.getElementById('fm-audio');
+  if(audio){audio.pause();audio.src='';}
+  fmSoundOn=false;
+  var sb=document.getElementById('fm-sound-btn');
+  if(sb){sb.textContent='🔇 Sound';sb.classList.remove('on');}
+}
+
 function fmToggle(){
   if(fmRunning){
     fmRunning=false;
@@ -1315,12 +1484,24 @@ function fmToggle(){
     document.getElementById('fm-time').classList.add('running');
     if(!tRunning)toggleTimer();
   }
+  updateFmStats();
 }
+
 function syncFocusMode(){
-  if(document.getElementById('focus-mode').classList.contains('open')){
-    document.getElementById('fm-time').textContent=document.getElementById('tDisp').textContent;
-    document.getElementById('fm-bar').style.width=document.getElementById('tBar').style.width;
-    if(!tRunning&&fmRunning){fmRunning=false;document.getElementById('fm-btn').textContent='▶ Start';document.getElementById('fm-time').classList.remove('running');}
+  if(!document.getElementById('focus-mode').classList.contains('open'))return;
+  var disp=document.getElementById('tDisp').textContent;
+  document.getElementById('fm-time').textContent=disp;
+  document.getElementById('fm-bar').style.width=document.getElementById('tBar').style.width;
+  // Warning colour at 20% remaining
+  var pctLeft=tSecs/tTotal;
+  var ft=document.getElementById('fm-time');
+  if(!tRunning&&fmRunning){
+    fmRunning=false;
+    ft.className='fm-time done';
+    document.getElementById('fm-btn').textContent='▶ Start';
+    updateFmStats();
+  } else if(tRunning){
+    ft.className='fm-time running'+(pctLeft<0.2?' warning':'');
   }
 }
 
@@ -1820,11 +2001,23 @@ function initMemory(){
 // KEYBOARD
 // ═══════════════════════════════════════════════════
 document.addEventListener('keydown',function(e){
+  var inFocus=document.getElementById('focus-mode').classList.contains('open');
+  var inGame=document.getElementById('game-modal').classList.contains('open');
+  var inPhoto=document.getElementById('fsm').classList.contains('open');
+
   if(e.key==='Escape'){
     closeFsm();closeBnFs();exitFocus();closeGbnLiveFs();
-    if(document.getElementById('game-modal').classList.contains('open'))closeGame();
+    if(inGame)closeGame();
+    return;
   }
-  if(document.getElementById('fsm').classList.contains('open')){
+  // Space = start/pause in focus mode (not when typing in input)
+  if(e.key===' '&&inFocus&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'){
+    e.preventDefault();
+    fmToggle();
+    return;
+  }
+  // Arrow keys for photo fullscreen
+  if(inPhoto){
     if(e.key==='ArrowLeft')fsmNav(-1);
     if(e.key==='ArrowRight')fsmNav(1);
   }
