@@ -1960,6 +1960,7 @@ function openGame(){
 }
 function closeGame(){
   if(snakeGame)snakeGame.stop();
+  document.onkeydown=null; // restore normal key handling
   document.getElementById('game-modal').classList.remove('open');
   document.body.style.overflow='';
 }
@@ -2034,6 +2035,8 @@ function initSnake(){
   }
   function stop(){clearInterval(interval);running=false;}
   document.onkeydown=function(e){
+    var tag=document.activeElement.tagName;
+    if(tag==='INPUT'||tag==='TEXTAREA')return; // never steal from text inputs
     var map={ArrowUp:{x:0,y:-1},ArrowDown:{x:0,y:1},ArrowLeft:{x:-1,y:0},ArrowRight:{x:1,y:0},w:{x:0,y:-1},s:{x:0,y:1},a:{x:-1,y:0},d:{x:1,y:0}};
     var nd=map[e.key];
     if(nd){e.preventDefault();if(nd.x===-dir.x&&nd.y===-dir.y)return;nextDir=nd;if(!running)start();}
@@ -2083,6 +2086,8 @@ function init2048(){
   }
   newBoard();render();
   document.onkeydown=function(e){
+    var tag=document.activeElement.tagName;
+    if(tag==='INPUT'||tag==='TEXTAREA')return;
     var map={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',a:'left',d:'right',w:'up',s:'down'};
     var d=map[e.key];if(d){e.preventDefault();move(d);}
     if(e.key==='Escape')closeGame();
@@ -2126,7 +2131,9 @@ function initMemory(){
     };
     grid.appendChild(c);
   });
-  document.onkeydown=function(e){if(e.key==='Escape')closeGame();};
+  document.onkeydown=function(e){
+    if(e.key==='Escape')closeGame();
+  };
   snakeGame={start:function(){},stop:function(){clearInterval(timeInt);}};
 }
 
