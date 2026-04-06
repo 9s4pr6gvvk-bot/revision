@@ -2148,44 +2148,51 @@ function initMemory(){
 function initZip(){
   var body=document.getElementById('game-body');
   var SIZE=5;
-  // Prebuilt puzzles: each is {size, numbers:{cellIndex:number}, path:[cellIndex,...]}
-  var PUZZLES=[
-    // 5x5 puzzle 1
-    {size:5,numbers:{0:1,4:2,24:3,20:4,12:5},
-     path:[0,1,2,3,4,9,8,7,6,11,16,17,18,13,14,19,24,23,22,21,20,15,10,5,6,7,8,9,14,13,12]},
-    // 5x5 puzzle 2  
-    {size:5,numbers:{0:1,2:2,14:3,22:4,24:5},
-     path:[0,5,10,15,20,21,22,23,24,19,18,17,16,11,6,1,2,3,4,9,8,7,12,13,14]},
-    // 5x5 puzzle 3
-    {size:5,numbers:{0:1,4:2,9:3,20:4,24:5},
-     path:[0,1,2,3,4,9,8,7,6,11,12,13,14,19,18,17,16,15,10,5,6,7,8,9,14,13,12,17,22,21,20,21,22,23,24]},
-    // 5x5 puzzle 4
-    {size:5,numbers:{0:1,19:2,5:3,24:4,12:5},
-     path:[0,1,2,3,4,9,14,13,8,7,6,11,16,17,18,23,24,19,18,13,12,7,8,9,14]},
-    // 5x5 puzzle 5
-    {size:5,numbers:{4:1,0:2,20:3,24:4,12:5},
-     path:[4,3,2,1,0,5,6,7,8,9,14,13,12,11,10,15,16,17,18,19,24,23,22,21,20]}
-  ];
 
-  // Build a random valid puzzle using a snake-scan path with numbers at intervals
+  // Generate a random snake-path puzzle — different every call
   function makeSnakePuzzle(sz, numCount){
+    // Pick a random starting corner and direction to vary the snake path
     var path=[];
+    var variant=Math.floor(Math.random()*4);
     for(var r=0;r<sz;r++){
-      if(r%2===0){for(var c=0;c<sz;c++)path.push(r*sz+c);}
-      else{for(var c=sz-1;c>=0;c--)path.push(r*sz+c);}
+      var row=[];
+      for(var c=0;c<sz;c++) row.push(r*sz+c);
+      // Alternate row direction; optionally flip entire grid
+      var forward=(variant<2)?r%2===0:r%2!==0;
+      if(!forward) row.reverse();
+      for(var j=0;j<row.length;j++) path.push(row[j]);
+    }
+    // Optionally transpose (read column-first instead of row-first)
+    if(variant===2||variant===3){
+      var tpath=[];
+      for(var c2=0;c2<sz;c2++){
+        var col=[];
+        for(var r2=0;r2<sz;r2++) col.push(r2*sz+c2);
+        if(c2%2!==0) col.reverse();
+        for(var j=0;j<col.length;j++) tpath.push(col[j]);
+      }
+      path=tpath;
     }
     var total=sz*sz;
     var numbers={};
+    // Space numbers evenly, but add small random jitter so they don't always land in same spots
     var step=Math.floor(total/(numCount-1));
     for(var n=0;n<numCount;n++){
-      var pi=n===numCount-1?total-1:n*step;
+      var base=n===numCount-1?total-1:n*step;
+      // Jitter ±1 step but keep in bounds and not colliding
+      var jitter=n>0&&n<numCount-1?Math.floor(Math.random()*3)-1:0;
+      var pi=Math.min(total-1,Math.max(n,base+jitter));
+      // Avoid duplicate
+      while(Object.values(numbers).indexOf(pi)>=0) pi=Math.min(total-1,pi+1);
       numbers[path[pi]]=n+1;
     }
     return{size:sz,numbers:numbers,path:path};
   }
 
-  var puzIdx=doy()%PUZZLES.length;
-  var puz=PUZZLES[puzIdx];
+  // Pick size/numCount randomly for variety
+  var configs=[[5,5],[5,6],[5,5],[5,6],[6,5],[6,6]];
+  var cfg=configs[Math.floor(Math.random()*configs.length)];
+  var puz=makeSnakePuzzle(cfg[0],cfg[1]);
   SIZE=puz.size;
   var NUMS=puz.numbers;
   var SOLUTION=puz.path;
