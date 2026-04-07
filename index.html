@@ -225,6 +225,37 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;justify-content
 @media(max-width:1060px){.main-layout{grid-template-columns:1fr;}.side-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex-direction:unset;}}
 @media(max-width:640px){.main-layout{grid-template-columns:1fr;}.side-col{grid-template-columns:1fr;}}
 
+/* ── ASSIGNMENTS ── */
+.assign-section{margin-bottom:24px;}
+.assign-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.assign-title{font-family:'Syne',sans-serif;font-size:clamp(15px,2.2vw,18px);font-weight:800;color:#f0ede8;display:flex;align-items:center;gap:8px;}
+.assign-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:900px){.assign-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.assign-grid{grid-template-columns:1fr;}}
+.acard{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:16px;position:relative;overflow:hidden;transition:border-color .2s;}
+.acard:hover{border-color:rgba(255,255,255,.22);}
+.acard-urgent{border-color:rgba(248,113,113,.4);background:rgba(248,113,113,.05);}
+.acard-urgent:hover{border-color:rgba(248,113,113,.65);}
+.acard-subj{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:7px;}
+.as-econ{color:#93c5fd;}.as-biz{color:#fcd34d;}.as-geo{color:#6ee7b7;}.as-multi{color:#c4b5fd;}
+.acard-title{font-family:'Syne',sans-serif;font-size:clamp(13px,1.8vw,15px);font-weight:700;color:#f0ede8;margin-bottom:8px;line-height:1.3;}
+.acard-due{display:flex;align-items:center;gap:5px;font-size:11px;margin-bottom:10px;}
+.acard-due-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.due-red{background:#f87171;}.due-amber{background:#fcd34d;}.due-green{background:#6ee7b7;}
+.acard-due-txt{color:#aaa;}
+.acard-due-txt strong{color:#f0ede8;}
+.acard-tasks{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
+.atask{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:#bbb;line-height:1.5;cursor:pointer;padding:3px 0;}
+.atask-check{width:16px;height:16px;border-radius:4px;border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;margin-top:1px;transition:all .2s;}
+.atask.done-task .atask-check{background:#10b981;border-color:#10b981;color:#fff;}
+.atask.done-task .atask-txt{text-decoration:line-through;color:#555;}
+.atask-txt{flex:1;}
+.atask-txt a{color:var(--bl);text-decoration:underline;}
+.atask-txt a:hover{color:#93c5fd;}
+.acard-progress{height:3px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;}
+.acard-progress-bar{height:100%;background:linear-gradient(to right,var(--blue),var(--bl));border-radius:3px;transition:width .4s;}
+.acard-bg{position:absolute;top:8px;right:10px;font-size:44px;opacity:.06;pointer-events:none;line-height:1;}
+
 /* ── CHECKLIST ── */
 .checklist-card{background:var(--s);border:1px solid var(--b);border-radius:16px;overflow:hidden;}
 .checklist-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.07);}
@@ -794,6 +825,95 @@ footer{margin-top:32px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.
       <div class="sc"><div class="sc-ico">✅</div><div class="sc-info"><div class="sv" id="sStat">0</div><div class="sl">Topics Confident</div></div></div>
       <div class="sc"><div class="sc-ico">⏱</div><div class="sc-info"><div class="sv" id="hStat">0h</div><div class="sl">Hours Revised</div></div></div>
       <div class="sc"><div class="sc-ico">🔥</div><div class="sc-info"><div class="sv" id="dStat">0</div><div class="sl">Days Active</div></div></div>
+    </div>
+  </div>
+
+  <!-- ASSIGNMENTS -->
+  <div class="assign-section">
+    <div class="assign-header">
+      <div class="assign-title">📋 Assignments Due — Easter Homework</div>
+      <span style="font-size:11px;color:#555;">Due by Tue 14 April 2026</span>
+    </div>
+    <div class="assign-grid" id="assign-grid">
+
+      <!-- Economics: Zambia + Pack 20 -->
+      <div class="acard acard-urgent" id="acard-0">
+        <div class="acard-bg">📈</div>
+        <div class="acard-subj as-econ">📈 Economics A · Due 14 Apr 11:59 PM</div>
+        <div class="acard-title">Zambia Pack + Pack 20 Exercises + Timed Q Prep</div>
+        <div class="acard-due">
+          <div class="acard-due-dot due-red"></div>
+          <div class="acard-due-txt">Due <strong>Mon 14 April 2026, 11:59 PM</strong></div>
+        </div>
+        <div class="acard-tasks" id="atasks-0">
+          <div class="atask" onclick="toggleATask(0,0)" id="at-0-0">
+            <div class="atask-check"></div>
+            <div class="atask-txt">Read &amp; complete the Zambia pack (revision + one written exercise)</div>
+          </div>
+          <div class="atask" onclick="toggleATask(0,1)" id="at-0-1">
+            <div class="atask-check"></div>
+            <div class="atask-txt">Complete remaining Pack 20 exercises (~45 mins) — dual coding images pp.7–8, BSS Qs &amp; final third activities</div>
+          </div>
+          <div class="atask" onclick="toggleATask(0,2)" id="at-0-2">
+            <div class="atask-check"></div>
+            <div class="atask-txt">Prepare for timed question first lesson back — Section B question on Packs 19 &amp; 20</div>
+          </div>
+          <div class="atask" onclick="toggleATask(0,3)" id="at-0-3">
+            <div class="atask-check"></div>
+            <div class="atask-txt">Revision — 3.5 weeks to final exams after Easter</div>
+          </div>
+        </div>
+        <div class="acard-progress"><div class="acard-progress-bar" id="aprog-0" style="width:0%"></div></div>
+      </div>
+
+      <!-- Geography -->
+      <div class="acard acard-urgent" id="acard-1">
+        <div class="acard-bg">🌍</div>
+        <div class="acard-subj as-geo">🌍 Geography · Due 14 Apr 8:00 AM</div>
+        <div class="acard-title">T12 &amp; T11 Exam Question Booklet + Moodle Quizzes</div>
+        <div class="acard-due">
+          <div class="acard-due-dot due-red"></div>
+          <div class="acard-due-txt">Due <strong>Mon 14 April 2026, 8:00 AM</strong></div>
+        </div>
+        <div class="acard-tasks" id="atasks-1">
+          <div class="atask" onclick="toggleATask(1,0)" id="at-1-0">
+            <div class="atask-check"></div>
+            <div class="atask-txt">Task 12 in EQB (pp.48–50) — synoptic Q: 'Assess how global distribution of communicable diseases is affected by global trade or global migration' (12m). Upload to Teams.</div>
+          </div>
+          <div class="atask" onclick="toggleATask(1,1)" id="at-1-1">
+            <div class="atask-check"></div>
+            <div class="atask-txt">Task 11 in EQB — essay plan: 'To what extent are the socio-economic impacts of a communicable disease more severe than a non-communicable disease?' (33m, June 2019). Bring to lesson — timed answer in 3rd lesson after Easter.</div>
+          </div>
+          <div class="atask" onclick="toggleATask(1,2)" id="at-1-2">
+            <div class="atask-check"></div>
+            <div class="atask-txt"><a href="https://moodle.greenhead.ac.uk/mod/quiz/view.php?id=86618" target="_blank">Moodle quiz — CVD case study ↗</a></div>
+          </div>
+          <div class="atask" onclick="toggleATask(1,3)" id="at-1-3">
+            <div class="atask-check"></div>
+            <div class="atask-txt"><a href="https://moodle.greenhead.ac.uk/mod/quiz/view.php?id=86619" target="_blank">Moodle quiz — Ebola case study ↗</a></div>
+          </div>
+        </div>
+        <div class="acard-progress"><div class="acard-progress-bar" id="aprog-1" style="width:0%"></div></div>
+      </div>
+
+      <!-- A1 Recap -->
+      <div class="acard acard-urgent" id="acard-2">
+        <div class="acard-bg">📚</div>
+        <div class="acard-subj as-multi">📚 All Subjects · Due 14 Apr 9:00 PM</div>
+        <div class="acard-title">A1 Recap Pack Part 2 — Topics 9–18</div>
+        <div class="acard-due">
+          <div class="acard-due-dot due-red"></div>
+          <div class="acard-due-txt">Due <strong>Mon 14 April 2026, 9:00 PM</strong></div>
+        </div>
+        <div class="acard-tasks" id="atasks-2">
+          <div class="atask" onclick="toggleATask(2,0)" id="at-2-0">
+            <div class="atask-check"></div>
+            <div class="atask-txt">Complete A1 Recap Pack Part 2 — Topics 9–18. Checked in lesson on Tuesday 14th April.</div>
+          </div>
+        </div>
+        <div class="acard-progress"><div class="acard-progress-bar" id="aprog-2" style="width:0%"></div></div>
+      </div>
+
     </div>
   </div>
 
@@ -2466,6 +2586,54 @@ document.getElementById('qTxt').textContent=QUOTES[doy()%QUOTES.length];
 // INIT
 // ═══════════════════════════════════════════════════
 // ═══════════════════════════════════════════════════
+// ASSIGNMENTS
+// ═══════════════════════════════════════════════════
+var ASSIGN_TASKS=[[4],[4],[1]]; // task counts per card
+if(!S.assignTasks)S.assignTasks={};
+
+function toggleATask(cardIdx,taskIdx){
+  var key='c'+cardIdx+'t'+taskIdx;
+  S.assignTasks[key]=!S.assignTasks[key];
+  save();
+  renderAssignments();
+}
+
+function renderAssignments(){
+  if(!S.assignTasks)S.assignTasks={};
+  ASSIGN_TASKS.forEach(function(taskCount,ci){
+    var count=taskCount[0];
+    var done=0;
+    for(var ti=0;ti<count;ti++){
+      var key='c'+ci+'t'+ti;
+      var el=document.getElementById('at-'+ci+'-'+ti);
+      if(!el)continue;
+      var isDone=!!S.assignTasks[key];
+      if(isDone){
+        el.classList.add('done-task');
+        el.querySelector('.atask-check').textContent='✓';
+        done++;
+      } else {
+        el.classList.remove('done-task');
+        el.querySelector('.atask-check').textContent='';
+      }
+    }
+    var prog=document.getElementById('aprog-'+ci);
+    if(prog)prog.style.width=Math.round(done/count*100)+'%';
+    // If all done, soften the card
+    var card=document.getElementById('acard-'+ci);
+    if(card){
+      if(done===count){
+        card.style.opacity='.55';
+        card.style.borderColor='rgba(16,185,129,.35)';
+      } else {
+        card.style.opacity='';
+        card.style.borderColor='';
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════
 // CHECKLIST
 // ═══════════════════════════════════════════════════
 var clTab='daily';
@@ -2554,7 +2722,9 @@ function init(){
   updateRings();renderLog();renderHmap();updateStats();renderPPQ();renderTip();
   buildPhotoDots();loadNotes();loadPinnedNote();
   if(!S.checklists)S.checklists={daily:[],weekly:[]};
+  if(!S.assignTasks)S.assignTasks={};
   renderCl();
+  renderAssignments();
   fetchGBNRSS(true);
   if(S.sessions)document.getElementById('sess-ct').textContent=S.sessions+' sessions done today';
   scheduleBreaking();
